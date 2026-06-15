@@ -362,16 +362,18 @@
     footer {
       border-top: 1px solid var(--border);
       padding: 2.5rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
-      flex-wrap: gap;
-      gap: 1rem;
+      flex-wrap: wrap;
+      gap: 2rem;
       color: var(--text-muted);
       font-size: 0.82rem;
     }
-    .footer-links { display: flex; gap: 1.5rem; }
-    .footer-links a { color: var(--text-muted); text-decoration: none; }
+    .footer-links { display: flex; flex-direction: column; gap: 0.4rem; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.82rem; }
     .footer-links a:hover { color: var(--text-dim); }
   </style>
 </head>
@@ -386,14 +388,18 @@
     <a href="#repositories">Repositories</a>
     <a href="#standards">Standards</a>
     <a href="#roadmap">Roadmap</a>
+    <a href="https://github.com/suplab/aether-iel" target="_blank">IEL →</a>
+    <a href="https://github.com/suplab/aether-iel" target="_blank">IEL →</a>
     <a href="https://github.com/suplab/aether-core" target="_blank">Core →</a>
     <a href="https://github.com/suplab/aether-grid" target="_blank">Grid →</a>
+    <a href="https://github.com/suplab/aether" target="_blank">GitHub</a>
+    <a href="https://github.com/suplab/aether" target="_blank">GitHub</a>
   </div>
 </nav>
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-badge">Cognitive Computing Ecosystem</div>
+  <div class="hero-badge">Ecosystem Hub · Distributed Cognitive Computing</div>
   <h1>
     Intelligence that<br>
     <span class="grad">remembers, reasons, and evolves</span>
@@ -465,11 +471,12 @@
 <!-- ECOSYSTEM -->
 <section id="ecosystem">
   <div class="container">
-    <div class="section-label">Architecture</div>
+    <div class="section-label">Ecosystem Architecture</div>
     <div class="section-title">Brain, Nervous System, Organs</div>
     <p class="section-sub">
       AetherCore is the brain — personal cognition, memory, and identity.
       AetherGrid is the nervous system — distributed agent orchestration and governance.
+      AIEL is the methodology — the 12-phase lifecycle every component is built and governed by.
       Everything else is a specialized organ built around them.
     </p>
     <div class="ecosystem-wrapper">
@@ -535,7 +542,7 @@
 <!-- REPOSITORIES -->
 <section id="repositories">
   <div class="container">
-    <div class="section-label">Repositories</div>
+    <div class="section-label">Ecosystem Repositories</div>
     <div class="section-title">One concern. One repository.</div>
     <p class="section-sub">Each component has a clearly bounded context, independent lifecycle, and clean API contract.</p>
     <div class="repo-grid">
@@ -655,7 +662,7 @@
 <!-- STANDARDS -->
 <section id="standards">
   <div class="container">
-    <div class="section-label">Standards</div>
+    <div class="section-label">Aether Standards</div>
     <div class="section-title">Non-negotiable rules, everywhere.</div>
     <p class="section-sub">Every Aether repository follows the same engineering standards. Consistency is not optional.</p>
     <div class="standards-grid">
@@ -732,7 +739,7 @@
 <!-- ROADMAP -->
 <section id="roadmap">
   <div class="container">
-    <div class="section-label">Roadmap</div>
+    <div class="section-label">Ecosystem Roadmap</div>
     <div class="section-title">Five phases to collective intelligence.</div>
     <p class="section-sub">Each phase delivers independently valuable capabilities while advancing toward the full vision.</p>
     <div class="roadmap-phases">
@@ -800,16 +807,33 @@
 
 <!-- FOOTER -->
 <footer>
-  <div style="color:var(--text-dim)">
-    <strong style="color:var(--text)">Æ Aether</strong> &mdash; Distributed Cognitive Computing Ecosystem
+  <div>
+    <div style="font-weight:700;font-size:1rem;margin-bottom:0.4rem"><strong style="color:var(--accent)">Æ</strong> Aether</div>
+    <div style="font-size:0.8rem;color:var(--text-muted)">Distributed Cognitive Computing Ecosystem<br>Philosophy, Standards &amp; Hub</div>
   </div>
-  <div class="footer-links">
-    <a href="docs/architecture/ecosystem-blueprint.md">Blueprint</a>
-    <a href="docs/vision/vision.md">Vision</a>
-    <a href="standards/development/java-guidelines.md">Standards</a>
-    <a href="governance/contribution-model.md">Governance</a>
-    <a href="https://github.com/suplab/aether-grid" target="_blank">AetherGrid ↗</a>
-    <a href="https://github.com/suplab/aether-core" target="_blank">AetherCore ↗</a>
+  <div>
+    <div style="font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.6rem">Ecosystem</div>
+    <div class="footer-links">
+      <a href="https://github.com/suplab/aether">Æ Aether — Hub &amp; Philosophy</a>
+      <a href="https://github.com/suplab/aether-iel">Aether IEL — Methodology</a>
+      <a href="https://github.com/suplab/aether-core">Aether Core — Cognitive Engine</a>
+      <a href="https://github.com/suplab/aether-grid">Aether Grid — Agent Mesh</a>
+    </div>
+  </div>
+  <div>
+    <div style="font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.6rem">Standards</div>
+    <div class="footer-links">
+      <a href="standards/development/java-guidelines.md">Java Guidelines</a>
+      <a href="standards/ai/agent-design.md">Agent Design</a>
+      <a href="standards/security/compliance.md">Security &amp; Compliance</a>
+      <a href="standards/operations/observability.md">Observability</a>
+    </div>
+  </div>
+  <div>
+    <div style="font-size:0.75rem;color:var(--text-muted)">
+      Bootstrapped with EEIK<br>
+      <a href="https://doi.org/10.5281/zenodo.20394197">Read the Paper ↗</a>
+    </div>
   </div>
 </footer>
 
