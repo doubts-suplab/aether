@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aether — Distributed Cognitive Computing Ecosystem</title>
+  <style>
+    :root {
+      --bg:          #0a0e1a;
+      --surface:     #111827;
+      --surface-2:   #1a2235;
+      --border:      #1e2d45;
+      --accent:      #3b82f6;
+      --accent-2:    #6366f1;
+      --accent-glow: rgba(59,130,246,0.15);
+      --text:        #e2e8f0;
+      --text-muted:  #64748b;
+      --text-dim:    #94a3b8;
+      --green:       #10b981;
+      --amber:       #f59e0b;
+      --purple:      #8b5cf6;
+      --teal:        #14b8a6;
+      --font:        'Inter', 'Segoe UI', system-ui, sans-serif;
+      --mono:        'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 15px;
+      line-height: 1.65;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,14,26,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 56px;
+    }
+    .nav-brand {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--text);
+    }
+    .nav-brand span { color: var(--accent); }
+    .nav-links { display: flex; gap: 1.6rem; }
+    .nav-links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 7rem 2rem 5rem;
+      text-align: center;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(59,130,246,0.1) 0%, transparent 70%);
+    }
+    .hero-badge {
+      display: inline-block;
+      padding: 0.3rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.6rem;
+      background: rgba(59,130,246,0.08);
+    }
+    .hero h1 {
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 .grad {
+      background: linear-gradient(135deg, #60a5fa, #818cf8, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text-dim);
+      max-width: 640px;
+      margin: 0 auto 2.5rem;
+    }
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.65rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: 1px solid var(--accent);
+    }
+    .btn-primary:hover { background: #2563eb; }
+    .btn-outline {
+      background: transparent;
+      color: var(--text-dim);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--text); }
+
+    /* ── GRID LAYOUT ── */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+    section { padding: 5rem 0; }
+    section + section { border-top: 1px solid var(--border); }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+    .section-title {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.8rem;
+    }
+    .section-sub {
+      color: var(--text-dim);
+      font-size: 1rem;
+      max-width: 600px;
+      margin-bottom: 3rem;
+    }
+
+    /* ── PHILOSOPHY ── */
+    .philosophy-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .philosophy-card {
+      background: var(--surface);
+      padding: 2rem;
+      transition: background 0.2s;
+    }
+    .philosophy-card:hover { background: var(--surface-2); }
+    .phil-icon {
+      font-size: 1.6rem;
+      margin-bottom: 0.8rem;
+    }
+    .phil-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .phil-desc { color: var(--text-dim); font-size: 0.88rem; }
+
+    /* ── ECOSYSTEM DIAGRAM ── */
+    .ecosystem-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+    @media (max-width: 768px) { .ecosystem-wrapper { grid-template-columns: 1fr; } }
+
+    .eco-diagram {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      line-height: 1.8;
+    }
+    .eco-diagram .hl-blue  { color: #60a5fa; font-weight: 700; }
+    .eco-diagram .hl-green { color: var(--green); }
+    .eco-diagram .hl-purple{ color: var(--purple); }
+    .eco-diagram .hl-amber { color: var(--amber); }
+    .eco-diagram .hl-teal  { color: var(--teal); }
+    .eco-diagram .hl-dim   { color: var(--text-muted); }
+
+    .eco-list { display: flex; flex-direction: column; gap: 1rem; }
+    .eco-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem 1.2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .eco-item:hover { border-color: var(--accent); background: var(--surface-2); }
+    .eco-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+    .eco-item-name { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.2rem; }
+    .eco-item-desc { color: var(--text-dim); font-size: 0.83rem; }
+
+    /* ── REPOSITORIES ── */
+    .repo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.2rem;
+    }
+    .repo-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .repo-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent-glow), 0 8px 32px rgba(0,0,0,0.3);
+    }
+    .repo-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      margin-bottom: 0.7rem;
+    }
+    .repo-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .repo-name { font-weight: 700; font-size: 0.95rem; }
+    .repo-phase {
+      margin-left: auto;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 99px;
+      border: 1px solid;
+    }
+    .phase-active  { color: var(--green);  border-color: var(--green);  background: rgba(16,185,129,0.08); }
+    .phase-planned { color: var(--amber);  border-color: var(--amber);  background: rgba(245,158,11,0.08); }
+    .phase-concept { color: var(--text-muted); border-color: var(--border); background: transparent; }
+    .repo-desc { color: var(--text-dim); font-size: 0.85rem; }
+
+    /* ── STANDARDS ── */
+    .standards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .std-card {
+      background: var(--surface);
+      padding: 1.6rem;
+    }
+    .std-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.6rem; }
+    .std-items { list-style: none; }
+    .std-items li {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      padding: 0.25rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .std-items li:last-child { border-bottom: none; }
+    .std-items li::before { content: '›'; color: var(--accent); font-weight: 700; }
+
+    /* ── ROADMAP ── */
+    .roadmap-phases {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+    }
+    @media (max-width: 900px) { .roadmap-phases { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 500px) { .roadmap-phases { grid-template-columns: 1fr; } }
+    .phase-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.4rem;
+    }
+    .phase-num {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+    .phase-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.6rem; }
+    .phase-repos { display: flex; flex-direction: column; gap: 0.3rem; }
+    .phase-repo { font-size: 0.78rem; color: var(--text-dim); }
+    .phase-repo::before { content: '→ '; color: var(--accent); }
+
+    /* ── PUBLICATION ── */
+    .pub-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 10px;
+      padding: 1.5rem 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .pub-icon { font-size: 2rem; }
+    .pub-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem; }
+    .pub-meta { font-size: 0.82rem; color: var(--text-dim); margin-bottom: 0.6rem; }
+    .pub-link { font-size: 0.82rem; color: var(--accent); text-decoration: none; }
+    .pub-link:hover { text-decoration: underline; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: gap;
+      gap: 1rem;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; }
+    .footer-links a:hover { color: var(--text-dim); }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">Æ <span>Aether</span></div>
+  <div class="nav-links">
+    <a href="#philosophy">Philosophy</a>
+    <a href="#ecosystem">Ecosystem</a>
+    <a href="#repositories">Repositories</a>
+    <a href="#standards">Standards</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="https://github.com/suplab/aether-core" target="_blank">Core →</a>
+    <a href="https://github.com/suplab/aether-grid" target="_blank">Grid →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">Cognitive Computing Ecosystem</div>
+  <h1>
+    Intelligence that<br>
+    <span class="grad">remembers, reasons, and evolves</span>
+  </h1>
+  <p>
+    Aether is a distributed cognitive computing platform for building persistent,
+    memory-driven, agentic AI systems — enterprise-ready, explainable, and domain-adaptable.
+  </p>
+  <div class="hero-cta">
+    <a href="#ecosystem" class="btn btn-primary">Explore the Ecosystem</a>
+    <a href="https://doi.org/10.5281/zenodo.20394197" target="_blank" class="btn btn-outline">Read the Paper ↗</a>
+  </div>
+</div>
+
+<!-- PHILOSOPHY -->
+<section id="philosophy">
+  <div class="container">
+    <div class="section-label">Core Philosophy</div>
+    <div class="section-title">We are not engineering software.<br>We are engineering intelligence.</div>
+    <p class="section-sub">
+      Most AI systems are stateless and transactional. Aether exists to provide what they lack:
+      persistent memory, emotional context, long-term reasoning, and enterprise-grade governance.
+    </p>
+    <div class="philosophy-grid">
+      <div class="philosophy-card">
+        <div class="phil-icon">🧠</div>
+        <div class="phil-title">Memory First</div>
+        <div class="phil-desc">Memory is a first-class capability, not a feature. Episodic, semantic, procedural, and emotional memory are core primitives — not afterthoughts.</div>
+      </div>
+      <div class="philosophy-card">
+        <div class="phil-icon">🔄</div>
+        <div class="phil-title">Model Agnostic</div>
+        <div class="phil-desc">No dependence on a single LLM provider. All intelligence flows through clean port interfaces — Ollama, Groq, Anthropic, or any future model.</div>
+      </div>
+      <div class="philosophy-card">
+        <div class="phil-icon">⚡</div>
+        <div class="phil-title">Event Driven</div>
+        <div class="phil-desc">Everything is an event. API calls, agent decisions, memory reinforcements, and governance actions flow through an event-driven fabric.</div>
+      </div>
+      <div class="philosophy-card">
+        <div class="phil-icon">👤</div>
+        <div class="phil-title">Human in the Loop</div>
+        <div class="phil-desc">Humans remain authoritative. Agents with confidence below threshold never auto-block. Every consequential decision surfaces for human review.</div>
+      </div>
+      <div class="philosophy-card">
+        <div class="phil-icon">🔍</div>
+        <div class="phil-title">Explainability</div>
+        <div class="phil-desc">Every agent decision includes rationale. Every memory has provenance. Every policy evaluation is auditable — end to end.</div>
+      </div>
+      <div class="philosophy-card">
+        <div class="phil-icon">🧩</div>
+        <div class="phil-title">Composability</div>
+        <div class="phil-desc">Capabilities are modular and reusable. AetherCore, AetherGrid, and domain products are independent units that compose into collective intelligence.</div>
+      </div>
+      <div class="philosophy-card">
+        <div class="phil-icon">🏛️</div>
+        <div class="phil-title">Enterprise Readiness</div>
+        <div class="phil-desc">Multi-tenancy, GDPR compliance, row-level security, audit trails, and governance are built in — not bolted on.</div>
+      </div>
+      <div class="philosophy-card">
+        <div class="phil-icon">🌱</div>
+        <div class="phil-title">Evolvability</div>
+        <div class="phil-desc">Agents learn from feedback. Memories reinforce and decay. The architecture is designed to grow more capable over time, not drift stale.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ECOSYSTEM -->
+<section id="ecosystem">
+  <div class="container">
+    <div class="section-label">Architecture</div>
+    <div class="section-title">Brain, Nervous System, Organs</div>
+    <p class="section-sub">
+      AetherCore is the brain — personal cognition, memory, and identity.
+      AetherGrid is the nervous system — distributed agent orchestration and governance.
+      Everything else is a specialized organ built around them.
+    </p>
+    <div class="ecosystem-wrapper">
+      <div class="eco-diagram">
+<pre><span class="hl-blue">Aether</span>
+│
+├── <span class="hl-blue">AetherCore</span>         <span class="hl-dim">← Cognition (Brain)</span>
+│     ├── Memory Engine
+│     ├── Context Engine
+│     ├── Session Engine
+│     └── Identity Engine
+│
+├── <span class="hl-green">AetherGrid</span>         <span class="hl-dim">← Runtime (Nervous System)</span>
+│     ├── Agent Mesh
+│     ├── Policy Engine
+│     ├── API Proxy
+│     └── Observability
+│
+├── <span class="hl-purple">AetherMemory</span>        <span class="hl-dim">← Memory Platform</span>
+├── <span class="hl-purple">AetherVault</span>         <span class="hl-dim">← Knowledge Platform</span>
+├── <span class="hl-purple">AetherFlow</span>          <span class="hl-dim">← Workflow Platform</span>
+├── <span class="hl-amber">AetherForge</span>         <span class="hl-dim">← Developer Platform</span>
+├── <span class="hl-amber">AetherMind</span>          <span class="hl-dim">← Personal Companion</span>
+├── <span class="hl-amber">AetherEnterprise</span>    <span class="hl-dim">← Enterprise Layer</span>
+├── <span class="hl-teal">AetherMesh</span>          <span class="hl-dim">← Federated Intelligence</span>
+└── <span class="hl-teal">Domain Products</span>     <span class="hl-dim">← Applications</span>
+      └── AetherClaims</pre>
+      </div>
+      <div class="eco-list">
+        <div class="eco-item">
+          <div class="eco-dot" style="background:#60a5fa"></div>
+          <div>
+            <div class="eco-item-name">AetherCore — The Brain</div>
+            <div class="eco-item-desc">Personal cognitive engine. Manages individual memories across four types (episodic, semantic, procedural, emotional), assembles cognitive sessions, and delivers personal context to agents.</div>
+          </div>
+        </div>
+        <div class="eco-item">
+          <div class="eco-dot" style="background:var(--green)"></div>
+          <div>
+            <div class="eco-item-name">AetherGrid — The Nervous System</div>
+            <div class="eco-item-desc">Distributed agent mesh and enterprise API governance. Intercepts all API traffic, orchestrates specialist agents, evaluates SpEL policies, and enforces compliance in real time.</div>
+          </div>
+        </div>
+        <div class="eco-item">
+          <div class="eco-dot" style="background:var(--purple)"></div>
+          <div>
+            <div class="eco-item-name">Platform Layer</div>
+            <div class="eco-item-desc">Shared capabilities — AetherMemory (memory services), AetherVault (knowledge & RAG), AetherFlow (workflow orchestration) — reusable across all domain products.</div>
+          </div>
+        </div>
+        <div class="eco-item">
+          <div class="eco-dot" style="background:var(--teal)"></div>
+          <div>
+            <div class="eco-item-name">Domain Products</div>
+            <div class="eco-item-desc">AetherClaims (insurance), AetherHealth, AetherSupport, and future domain applications — full agentic AI deployments built on the cognitive platform.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REPOSITORIES -->
+<section id="repositories">
+  <div class="container">
+    <div class="section-label">Repositories</div>
+    <div class="section-title">One concern. One repository.</div>
+    <p class="section-sub">Each component has a clearly bounded context, independent lifecycle, and clean API contract.</p>
+    <div class="repo-grid">
+
+      <div class="repo-card">
+        <div class="repo-card-header">
+          <div class="repo-icon" style="background:rgba(59,130,246,0.12);color:#60a5fa">Æ</div>
+          <div class="repo-name">aether</div>
+          <div class="repo-phase phase-active">Active</div>
+        </div>
+        <div class="repo-desc">Ecosystem index — vision, architecture, standards, governance, ADRs, roadmaps. The canonical source of truth. No runtime code.</div>
+      </div>
+
+      <div class="repo-card">
+        <div class="repo-card-header">
+          <div class="repo-icon" style="background:rgba(59,130,246,0.12);color:#60a5fa">🧠</div>
+          <div class="repo-name">aether-core</div>
+          <div class="repo-phase phase-active">Active</div>
+        </div>
+        <div class="repo-desc">Personal cognitive engine. Individual memory, reasoning sessions, emotional context. REST API consumed by AetherGrid agents. Port 8082.</div>
+      </div>
+
+      <div class="repo-card">
+        <div class="repo-card-header">
+          <div class="repo-icon" style="background:rgba(16,185,129,0.12);color:var(--green)">⚡</div>
+          <div class="repo-name">aether-grid</div>
+          <div class="repo-phase phase-active">Active</div>
+        </div>
+        <div class="repo-desc">Distributed agent mesh and enterprise governance. Spring Cloud Gateway proxy + admin API. 16 phases complete. Production-ready with Kubernetes/Helm.</div>
+      </div>
+
+      <div class="repo-card">
+        <div class="repo-card-header">
+          <div class="repo-icon" style="background:rgba(99,102,241,0.12);color:var(--accent-2)">📋</div>
+          <div class="repo-name">aether-iel</div>
+          <div class="repo-phase phase-active">Active</div>
+        </div>
+        <div class="repo-desc">Aether Intelligence Engineering Lifecycle. Methodology framework for engineering, governing, and evolving persistent intelligence systems.</div>
+      </div>
+
+      <div class="repo-card">
+        <div class="repo-card-header">
+          <div class="repo-icon" style="background:rgba(139,92,246,0.12);color:var(--purple)">💾</div>
+          <div class="repo-name">aether-memory</div>
+          <div class="repo-phase phase-planned">Phase 2</div>
+        </div>
+        <div class="repo-desc">Standalone reusable memory platform — episodic, semantic, emotional, working memory. Shared memory graph. Memory decay and reinforcement services.</div>
+      </div>
+
+      <div class="repo-card">
+        <div class="repo-card-header">
+          <div class="repo-icon" style="background:rgba(139,92,246,0.12);color:var(--purple)">📚</div>
+          <div class="repo-name">aether-vault</div>
+          <div class="repo-phase phase-planned">Phase 2</div>
+        </div>
+        <div class="repo-desc">Knowledge persistence platform — document indexing, vector embeddings, knowledge graph, RAG pipelines, and search APIs.</div>
+      </div>
+
+      <div class="repo-card">
+        <div class="repo-card-header">
+          <div class="repo-icon" style="background:rgba(139,92,246,0.12);color:var(--purple)">🔀</div>
+          <div class="repo-name">aether-flow</div>
+          <div class="repo-phase phase-planned">Phase 3</div>
+        </div>
+        <div class="repo-desc">Workflow orchestration — BPMN, human approvals, long-running workflows, event-driven execution, and multi-agent collaboration.</div>
+      </div>
+
+      <div class="repo-card">
+        <div class="repo-card-header">
+          <div class="repo-icon" style="background:rgba(245,158,11,0.12);color:var(--amber)">🛠️</div>
+          <div class="repo-name">aether-forge</div>
+          <div class="repo-phase phase-planned">Phase 4</div>
+        </div>
+        <div class="repo-desc">Developer platform — agent templates, skill marketplace, MCP development kit, workflow designer, testing harness. Think Spring Initializr for agents.</div>
+      </div>
+
+      <div class="repo-card">
+        <div class="repo-card-header">
+          <div class="repo-icon" style="background:rgba(245,158,11,0.12);color:var(--amber)">🤖</div>
+          <div class="repo-name">aether-mind</div>
+          <div class="repo-phase phase-planned">Phase 4</div>
+        </div>
+        <div class="repo-desc">Personal AI companion — long-term memory, coaching, knowledge management, personal automation. Individual intelligence at human scale.</div>
+      </div>
+
+      <div class="repo-card">
+        <div class="repo-card-header">
+          <div class="repo-icon" style="background:rgba(20,184,166,0.12);color:var(--teal)">🌐</div>
+          <div class="repo-name">aether-mesh</div>
+          <div class="repo-phase phase-concept">Phase 5</div>
+        </div>
+        <div class="repo-desc">Federated intelligence network — multi-instance communication, shared memory federation, enterprise clustering. An internet of AI minds.</div>
+      </div>
+
+      <div class="repo-card">
+        <div class="repo-card-header">
+          <div class="repo-icon" style="background:rgba(20,184,166,0.12);color:var(--teal)">🏢</div>
+          <div class="repo-name">aether-enterprise</div>
+          <div class="repo-phase phase-planned">Phase 3</div>
+        </div>
+        <div class="repo-desc">Enterprise deployment — multi-tenancy, compliance, audit, private deployments, agent observability, and governance dashboards.</div>
+      </div>
+
+      <div class="repo-card">
+        <div class="repo-card-header">
+          <div class="repo-icon" style="background:rgba(239,68,68,0.12);color:#f87171">📋</div>
+          <div class="repo-name">aether-claims</div>
+          <div class="repo-phase phase-concept">Future</div>
+        </div>
+        <div class="repo-desc">Insurance claims platform. Claim Intake → Document → Validation → Fraud → Assessment → Communication → Payment agents end to end.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- STANDARDS -->
+<section id="standards">
+  <div class="container">
+    <div class="section-label">Standards</div>
+    <div class="section-title">Non-negotiable rules, everywhere.</div>
+    <p class="section-sub">Every Aether repository follows the same engineering standards. Consistency is not optional.</p>
+    <div class="standards-grid">
+      <div class="std-card">
+        <div class="std-title">⚙️ Java Engineering</div>
+        <ul class="std-items">
+          <li>Java 21 with preview features</li>
+          <li>Spring Boot 3.x — jakarta.* only</li>
+          <li>Constructor injection exclusively</li>
+          <li>SOLID + DDD bounded contexts</li>
+          <li>80% JaCoCo line coverage</li>
+          <li>Conventional commits</li>
+        </ul>
+      </div>
+      <div class="std-card">
+        <div class="std-title">🔒 Security</div>
+        <ul class="std-items">
+          <li>No hardcoded secrets — ever</li>
+          <li>Parameterized SQL only</li>
+          <li>GDPR redaction before persistence</li>
+          <li>Row-level security on all tables</li>
+          <li>tenant_id in every WHERE clause</li>
+          <li>OWASP CVE gate on PRs</li>
+        </ul>
+      </div>
+      <div class="std-card">
+        <div class="std-title">🤖 Agent Design</div>
+        <ul class="std-items">
+          <li>Confidence &lt; 0.8 → human review</li>
+          <li>All LLM calls via LlmClient interface</li>
+          <li>Agents declare capabilities explicitly</li>
+          <li>Fast-path when LLM not needed</li>
+          <li>Defaults safe on parse/LLM failure</li>
+          <li>Feedback loop on all decisions</li>
+        </ul>
+      </div>
+      <div class="std-card">
+        <div class="std-title">📊 Observability</div>
+        <ul class="std-items">
+          <li>OpenTelemetry tracing on all services</li>
+          <li>Micrometer + Prometheus metrics</li>
+          <li>SLF4J parameterized logging only</li>
+          <li>Actuator health + readiness probes</li>
+          <li>Agent latency and decision counters</li>
+          <li>Grafana dashboards for all services</li>
+        </ul>
+      </div>
+      <div class="std-card">
+        <div class="std-title">🏗️ Architecture</div>
+        <ul class="std-items">
+          <li>Hexagonal architecture per module</li>
+          <li>Port interfaces for all cross-module calls</li>
+          <li>Explicit SQL column lists — no SELECT *</li>
+          <li>Transactional outbox for Kafka</li>
+          <li>Circuit breakers on all external calls</li>
+          <li>ADR for every significant decision</li>
+        </ul>
+      </div>
+      <div class="std-card">
+        <div class="std-title">☸️ Operations</div>
+        <ul class="std-items">
+          <li>Kubernetes-native deployment</li>
+          <li>Helm charts for all services</li>
+          <li>GitHub Actions OIDC — no static secrets</li>
+          <li>Non-root containers everywhere</li>
+          <li>HPA with CPU-based scaling</li>
+          <li>Startup + liveness + readiness probes</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="container">
+    <div class="section-label">Roadmap</div>
+    <div class="section-title">Five phases to collective intelligence.</div>
+    <p class="section-sub">Each phase delivers independently valuable capabilities while advancing toward the full vision.</p>
+    <div class="roadmap-phases">
+      <div class="phase-card" style="border-top: 3px solid var(--accent)">
+        <div class="phase-num">Phase 1 — Active</div>
+        <div class="phase-title">Foundation</div>
+        <div class="phase-repos">
+          <div class="phase-repo">aether (architecture)</div>
+          <div class="phase-repo">aether-core (cognition)</div>
+          <div class="phase-repo">aether-grid (runtime)</div>
+          <div class="phase-repo">aether-iel (methodology)</div>
+        </div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">Phase 2 — Planned</div>
+        <div class="phase-title">Memory & Knowledge</div>
+        <div class="phase-repos">
+          <div class="phase-repo">aether-memory</div>
+          <div class="phase-repo">aether-vault</div>
+        </div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">Phase 3 — Planned</div>
+        <div class="phase-title">Enterprise</div>
+        <div class="phase-repos">
+          <div class="phase-repo">aether-flow</div>
+          <div class="phase-repo">aether-enterprise</div>
+        </div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">Phase 4 — Planned</div>
+        <div class="phase-title">Personal Intelligence</div>
+        <div class="phase-repos">
+          <div class="phase-repo">aether-mind</div>
+          <div class="phase-repo">aether-forge</div>
+        </div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">Phase 5 — Vision</div>
+        <div class="phase-title">Collective Intelligence</div>
+        <div class="phase-repos">
+          <div class="phase-repo">aether-mesh</div>
+          <div class="phase-repo">Domain ecosystems</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PUBLICATION -->
+<section>
+  <div class="container">
+    <div class="section-label">Research</div>
+    <div class="section-title">Published work</div>
+    <div class="pub-card">
+      <div class="pub-icon">📄</div>
+      <div>
+        <div class="pub-title">AetherGrid: A Distributed Cognitive-Orchestration Framework Linking Sensory-Emotional Memory Encoding (AetherCore) with Autonomous Agent Governance</div>
+        <div class="pub-meta">Zenodo Preprint · doi:10.5281/zenodo.20394197</div>
+        <a class="pub-link" href="https://doi.org/10.5281/zenodo.20394197" target="_blank">Read on Zenodo ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div style="color:var(--text-dim)">
+    <strong style="color:var(--text)">Æ Aether</strong> &mdash; Distributed Cognitive Computing Ecosystem
+  </div>
+  <div class="footer-links">
+    <a href="docs/architecture/ecosystem-blueprint.md">Blueprint</a>
+    <a href="docs/vision/vision.md">Vision</a>
+    <a href="standards/development/java-guidelines.md">Standards</a>
+    <a href="governance/contribution-model.md">Governance</a>
+    <a href="https://github.com/suplab/aether-grid" target="_blank">AetherGrid ↗</a>
+    <a href="https://github.com/suplab/aether-core" target="_blank">AetherCore ↗</a>
+  </div>
+</footer>
+
+</body>
+</html>
