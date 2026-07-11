@@ -26,6 +26,7 @@ Repository-specific ADRs live in `docs/adr/` within the relevant repository.
 | ADR-0007 | GDPR Article 17 implemented as hard-delete (no soft-delete) | Accepted | — |
 | ADR-0008 | Constructor injection exclusively — no field injection | Accepted | — |
 | ADR-0009 | Jakarta.* exclusively — no javax.* | Accepted | — |
+| ADR-0010 | A single federated operator console, not a per-repo SPA | Proposed | 2026-07-11 |
 
 > **Note:** The ADR documents above are pending formal write-up using `templates/adr-template.md`. The decisions themselves are already implemented across the ecosystem. Formal ADR documents are a near-term backlog item.
 
