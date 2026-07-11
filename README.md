@@ -44,9 +44,12 @@ Aether                              (this repository — architecture & standard
 │
 ├── Aether-IEL          (suplab/aether-iel)     ← Intelligence Engineering Lifecycle
 │
-├── AetherMemory        (planned — Phase 2)     ← Memory Platform
-├── AetherVault         (planned — Phase 2)     ← Knowledge Platform
-├── AetherFlow          (planned — Phase 3)     ← Workflow Platform
+├── AetherMemory        (suplab/aether-memory)  ← Memory Platform
+│     Phase 0 ✅ (scaffold)
+├── AetherVault         (suplab/aether-vault)   ← Knowledge Platform
+│     Phase 0 ✅ (scaffold)
+├── AetherFlow          (suplab/aether-flow)    ← Workflow Platform
+│     Phase 0 ✅ (scaffold)
 ├── AetherEnterprise    (planned — Phase 3)     ← Enterprise Layer
 ├── AetherMind          (planned — Phase 4)     ← Personal AI Companion
 ├── AetherForge         (planned — Phase 4)     ← Developer Platform
@@ -65,6 +68,9 @@ Aether                              (this repository — architecture & standard
 | [`aether-core`](https://github.com/suplab/aether-core) | Personal cognitive engine — memory, sessions, emotional context | Phase 2 🔄 |
 | [`aether-grid`](https://github.com/suplab/aether-grid) | Distributed agent mesh — enterprise API governance | Phase 17 🔄 |
 | [`aether-iel`](https://github.com/suplab/aether-iel) | Intelligence Engineering Lifecycle methodology framework | Active |
+| [`aether-memory`](https://github.com/suplab/aether-memory) | Shared team/org memory platform — federation, per-tenant policy | Phase 0 ✅ (scaffold) |
+| [`aether-vault`](https://github.com/suplab/aether-vault) | Knowledge platform — document indexing, vector search, RAG, knowledge graph | Phase 0 ✅ (scaffold) |
+| [`aether-flow`](https://github.com/suplab/aether-flow) | Workflow platform — process orchestration, human approval, SLA escalation, Grid DEFER intake | Phase 0 ✅ (scaffold) |
 
 ---
 

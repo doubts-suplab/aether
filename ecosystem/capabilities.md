@@ -42,7 +42,7 @@ The execution layer is where decisions happen in real time. Grid intercepts traf
 
 ---
 
-## Knowledge — Owner: AetherVault (Phase 2)
+## Knowledge — Owner: AetherVault (scaffolded — Phase 0 ✅)
 
 The knowledge layer manages structured, organizational knowledge — documents, facts, and relationships that belong to a team or organization rather than an individual. It is distinct from AetherCore's personal memory.
 
@@ -56,7 +56,7 @@ The knowledge layer manages structured, organizational knowledge — documents, 
 
 ---
 
-## Shared Memory — Owner: AetherMemory (Phase 2)
+## Shared Memory — Owner: AetherMemory (scaffolded — Phase 0 ✅)
 
 Team and organizational shared memory, extracted from AetherCore and generalized for multi-user and multi-instance scenarios.
 
@@ -69,7 +69,7 @@ Team and organizational shared memory, extracted from AetherCore and generalized
 
 ---
 
-## Workflows — Owner: AetherFlow (Phase 3)
+## Workflows — Owner: AetherFlow (scaffolded — Phase 0 ✅)
 
 | Capability | Description |
 |---|---|
