@@ -24,6 +24,8 @@
 
 **Goal:** Extract memory and knowledge as standalone, reusable platform services that any domain application can consume — without building on top of AetherCore directly.
 
+**Status:** Both platform repos are scaffolded (Phase 0 complete) — `aether-memory` and `aether-vault` are bootstrapped on the standard Java 21 / Spring Boot 3.3 / PostgreSQL stack and are building out their engines.
+
 **What ships:**
 
 ### `aether-memory`
@@ -48,6 +50,8 @@ A knowledge persistence and retrieval platform:
 ## Phase 3 — Enterprise Platform
 
 **Goal:** Make Aether deployable as a managed enterprise platform — with workflow orchestration, compliance tooling, and multi-organization governance.
+
+**Status:** `aether-flow` is scaffolded (Phase 0 complete) — a standalone workflow platform with a persisted orchestration state machine, human approval gates with SLA escalation, and Aether Grid DEFER intake, on port 8085. `aether-enterprise` is not yet started.
 
 **What ships:**
 
