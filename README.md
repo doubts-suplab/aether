@@ -49,7 +49,7 @@ Aether                              (this repository — architecture & standard
 ├── AetherVault         (suplab/aether-vault)   ← Knowledge Platform
 │     Phase 1 ✅ (ingestion & retrieval)
 ├── AetherFlow          (suplab/aether-flow)    ← Workflow Platform
-│     Phase 0 ✅ (scaffold)
+│     Phase 1 🔄 (orchestration hardening)
 ├── AetherEnterprise    (planned — Phase 3)     ← Enterprise Layer
 ├── AetherMind          (planned — Phase 4)     ← Personal AI Companion
 ├── AetherForge         (planned — Phase 4)     ← Developer Platform
@@ -70,7 +70,7 @@ Aether                              (this repository — architecture & standard
 | [`aether-iel`](https://github.com/suplab/aether-iel) | Intelligence Engineering Lifecycle methodology framework | Active |
 | [`aether-memory`](https://github.com/suplab/aether-memory) | Shared team/org memory platform — federation, per-tenant policy | Phase 1 ✅ (shared memory engine) |
 | [`aether-vault`](https://github.com/suplab/aether-vault) | Knowledge platform — document indexing, vector search, RAG, knowledge graph | Phase 1 ✅ (ingestion & retrieval) |
-| [`aether-flow`](https://github.com/suplab/aether-flow) | Workflow platform — process orchestration, human approval, SLA escalation, Grid DEFER intake | Phase 0 ✅ (scaffold) |
+| [`aether-flow`](https://github.com/suplab/aether-flow) | Workflow platform — process orchestration, human approval, SLA escalation, Grid DEFER intake | Phase 1 🔄 (orchestration hardening) |
 
 ---
 
