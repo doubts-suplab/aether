@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>How it fits — Aether Interactive Portal</title>
+<link rel="stylesheet" href="assets/portal.css" />
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand"><a href="index.html">Æ <span>Aether</span> · Portal</a></div>
+  <div class="nav-links">
+    <a href="index.html">Overview</a>
+    <a href="core.html">Core</a>
+    <a href="grid.html">Grid</a>
+    <a href="memory.html">Memory</a>
+    <a href="vault.html">Vault</a>
+    <a href="flow.html">Flow</a>
+    <a href="architecture.html" class="active">How it fits</a>
+    <a href="../index.html">← Hub</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="page-head">
+    <div class="eyebrow"><span class="dot" style="background:var(--accent-2)"></span>The whole picture</div>
+    <h1>Five platforms, <span class="grad">one cognitive fabric</span></h1>
+    <p class="lead">
+      Each platform owns exactly one capability and never reaches into another's store. They compose through clean
+      seams — REST contracts, the DEFER handoff, and the feedback loop. Here's how a single request flows through all of them.
+    </p>
+  </div>
+
+  <h2>Dependency direction</h2>
+  <p class="muted">Dependencies point downward. A platform may consume the one below it through a port or REST contract; it never reaches up or sideways into another's internals.</p>
+  <div class="flowdiagram">
+<span class="hl-teal">Domain products</span>  (AetherClaims, …)
+      │  consume
+      ▼
+<span class="hl-green">Aether Grid</span>   ← agent execution &amp; governance      <span class="hl-dim">runs agents inside →  HALO runtime</span>
+   │    │  DEFER (confidence too low)
+   │    └────────────────────────►  <span class="hl-purple">Aether Flow</span>   ← human approval + SLA
+   │  reads personal context (REST)
+   ▼
+<span class="hl-blue">Aether Core</span>   ← personal memory &amp; cognition
+   ▲   feedback: CORRECT / INCORRECT
+   └──────────  (from Grid, after outcome is known)
+
+<span class="hl-purple">Aether Memory</span>  ← shared team memory &amp; federation      <span class="hl-dim">(peer platform)</span>
+<span class="hl-purple">Aether Vault</span>   ← documents, knowledge &amp; RAG            <span class="hl-dim">(peer platform)</span>
+  </div>
+
+  <h2>One request, end to end</h2>
+  <div class="sim">
+    <div class="sim-head"><span class="badge">Walkthrough</span><span class="sim-title">Trace a governed decision across the fabric</span></div>
+    <div class="sim-sub">Step through how the platforms hand off to each other. Each step links to the simulation that shows that mechanic in detail.</div>
+    <div class="controls">
+      <button class="btn btn-primary" id="step">▶ Next step</button>
+      <button class="btn btn-ghost" id="reset">Restart</button>
+      <span class="pill pill-info" id="stepPill">step 0 / 6</span>
+    </div>
+    <div class="log" id="trace" style="max-height:none"></div>
+  </div>
+
+  <h2>The seams that make it compose</h2>
+  <div class="cards">
+    <div class="card">
+      <div class="card-title">🔗 REST context contract</div>
+      <div class="card-desc">Grid asks Core for a user's assembled <code>personalContext</code> over REST. Core stays the only owner of personal memory; Grid never keeps its own copy.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">⚡ The DEFER seam</div>
+      <div class="card-desc">When Grid's confidence gate can't auto-enforce, the decision becomes a bounded <code>DeferredDecision</code> and lands in Flow's approval queue — no Grid internals cross.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">🔄 The feedback loop</div>
+      <div class="card-desc">Once a decision's outcome is known, Grid publishes CORRECT / INCORRECT to Core, reinforcing or weakening the memories that informed it. The system learns.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">🌐 Federation projection</div>
+      <div class="card-desc">Memory shares only <code>FEDERATED</code> memories across instances, projected to bounded summaries — identity never crosses the boundary.</div>
+    </div>
+  </div>
+
+  <h2>Built by a method, run on a runtime</h2>
+  <div class="split">
+    <div class="panel panel-accent">
+      <h3>AIEL — the methodology</h3>
+      <p class="muted small">Every Aether component is engineered and governed by the
+        <a href="https://github.com/suplab/aether-iel" target="_blank">Aether Intelligence Engineering Lifecycle</a> —
+        a 12-phase lifecycle (Strategy → … → Retirement). It's doc-only: it <em>specifies</em> the agent contract, the
+        authority ladder, the confidence gate, and the governance controls you saw enforced in the simulations. It
+        builds no runtime itself.</p>
+    </div>
+    <div class="panel panel-accent">
+      <h3>HALO — the runtime <span class="pill pill-muted" style="font-size:0.62rem">peer platform</span></h3>
+      <p class="muted small">Grid's agent mesh executes inside
+        <a href="https://github.com/doubts-suplab/agent-harness" target="_blank">HALO — a vendor-neutral agent runtime</a> —
+        which owns the confidence gate, the default-deny tool registry, audit, and safe-failure defaults that AIEL
+        specifies. HALO is <strong>not part of Aether</strong>: it's an independent peer that Grid (and other products)
+        <em>consume</em> so they don't re-implement agent execution. This portal shows the behaviour Grid inherits from it.</p>
+    </div>
+  </div>
+
+  <div class="note blue">
+    <strong>Why the boundaries are strict:</strong> one capability per platform, consumed through ports or REST, never
+    re-implemented. That's what lets any platform run standalone, be replaced, or scale independently — and it's why
+    Aether, HALO, and the SDLC tooling stay separate products rather than one tangled codebase.
+  </div>
+</div>
+
+<footer>
+  <div><strong style="color:var(--accent)">Æ</strong> Aether · <a href="index.html">Portal home</a> · <a href="../index.html">Ecosystem hub</a></div>
+  <div>Illustrative offline model</div>
+</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const TRACE = [
+  { p:'Domain', c:'#14b8a6', t:'A domain product sends an API request through the fabric — it hits Grid first.', link:null },
+  { p:'Grid → Core', c:'#3b82f6', t:'Grid asks <a href="core.html">Core</a> for the user\'s assembled personal context over REST to inform the agents.', link:'core.html' },
+  { p:'Grid', c:'#10b981', t:'Grid runs its agent pipeline (inside HALO) and an agent proposes BLOCK at confidence 0.72 — below the 0.95 BLOCK ceiling.', link:'grid.html' },
+  { p:'Grid gate', c:'#f59e0b', t:'The confidence gate refuses to auto-enforce: 0.72 &lt; 0.95 → the decision becomes a DEFER.', link:'grid.html' },
+  { p:'Grid → Flow', c:'#8b5cf6', t:'The DEFER is projected to a bounded DeferredDecision and lands in <a href="flow.html">Flow</a>\'s approval queue with an SLA.', link:'flow.html' },
+  { p:'Flow', c:'#8b5cf6', t:'A human in the finance role approves the task before the SLA breaches; Flow advances the instance to completion.', link:'flow.html' },
+  { p:'Grid → Core', c:'#3b82f6', t:'The outcome is known — Grid publishes a CORRECT feedback signal to <a href="core.html">Core</a>, reinforcing the memories that informed it.', link:'core.html' },
+];
+let step = 0;
+function render() {
+  $('stepPill').textContent = `step ${step} / ${TRACE.length - 1}`;
+  $('trace').innerHTML = TRACE.slice(0, step+1).map((s,i) =>
+    `<div class="line" style="padding:0.5rem 0">
+      <span class="pill" style="border-color:${s.c};color:${s.c};background:transparent;font-size:0.7rem">${s.p}</span>
+      <span style="margin-left:0.5rem">${s.t}</span>
+    </div>`).join('');
+}
+$('step').addEventListener('click', () => { if (step < TRACE.length - 1) step++; render(); });
+$('reset').addEventListener('click', () => { step = 0; render(); });
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aether Grid — Interactive Portal</title>
+<link rel="stylesheet" href="assets/portal.css" />
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand"><a href="index.html">Æ <span>Aether</span> · Portal</a></div>
+  <div class="nav-links">
+    <a href="index.html">Overview</a>
+    <a href="core.html">Core</a>
+    <a href="grid.html" class="active">Grid</a>
+    <a href="memory.html">Memory</a>
+    <a href="vault.html">Vault</a>
+    <a href="flow.html">Flow</a>
+    <a href="architecture.html">How it fits</a>
+    <a href="../index.html">← Hub</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="page-head">
+    <div class="eyebrow"><span class="dot" style="background:var(--green)"></span>Aether Grid · The Nervous System · Ports 8080/8081</div>
+    <h1>Every agent decision passes <span class="grad">the confidence gate</span></h1>
+    <p class="lead">
+      Grid intercepts traffic, routes it through agent pipelines, and enforces one non-negotiable rule: an agent
+      that isn't confident enough <strong>cannot auto-enforce</strong>. Below the floor, its decision is turned into
+      a <strong>DEFER</strong> and routed to a human. The agent proposes; the runtime disposes.
+    </p>
+  </div>
+
+  <div class="sim">
+    <div class="sim-head"><span class="badge">Simulation</span><span class="sim-title">The confidence gate</span></div>
+    <div class="sim-sub">Pick what the agent proposes, set how confident it is, and run it through the gate. Watch the
+      decision envelope, whether it auto-enforces, and where it routes when it doesn't.</div>
+
+    <div class="split">
+      <div>
+        <label class="field">Scenario</label>
+        <select id="scenario"></select>
+
+        <label class="field" style="margin-top:1rem">Agent-proposed action</label>
+        <select id="action">
+          <option value="ALLOW">ALLOW — let the request through</option>
+          <option value="ALERT">ALERT — flag as advisory</option>
+          <option value="SUGGEST">SUGGEST — recommend, don't enforce</option>
+          <option value="BLOCK" selected>BLOCK — stop the request</option>
+        </select>
+
+        <label class="field" style="margin-top:1rem">Confidence <span class="rangeval" id="confVal">0.72</span></label>
+        <input type="range" id="conf" min="0" max="1" step="0.01" value="0.72">
+
+        <div class="controls" style="margin-top:1rem">
+          <button class="btn btn-primary" id="run">▶ Run through the gate</button>
+          <button class="btn btn-ghost" id="clear">Clear log</button>
+        </div>
+
+        <div class="panel" style="margin-top:0.5rem;padding:1rem 1.1rem">
+          <div class="kv"><span class="kk">Auto-enforce floor</span><span class="vv">0.80</span></div>
+          <div class="kv"><span class="kk">BLOCK ceiling (highest authority)</span><span class="vv">0.95</span></div>
+          <div class="kv"><span class="kk">SUGGEST authority</span><span class="vv">never auto-enforces</span></div>
+          <div class="kv"><span class="kk">gate_bypass_total</span><span class="vv" style="color:var(--green)">0 (must stay 0)</span></div>
+        </div>
+      </div>
+
+      <div>
+        <h3>Decision envelope</h3>
+        <div class="envelope" id="env">Run the gate to produce a decision…</div>
+        <div id="outcome" style="margin-top:1rem"></div>
+        <h3 style="margin-top:1.2rem">Append-only audit log</h3>
+        <div class="log" id="audit"><div class="line t">no decisions yet</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note blue">
+    <strong>Runtime note — Grid runs on HALO.</strong> The gate, tool registry, and audit you see here aren't
+    re-implemented inside each Grid agent. Grid's agent mesh executes inside
+    <a href="https://github.com/doubts-suplab/agent-harness" target="_blank">HALO — the vendor-neutral agent runtime →</a>
+    which owns the confidence gate, the default-deny tool registry, and safe-failure defaults. HALO is a separate peer
+    platform Grid <em>consumes</em>; it is not part of Aether. This portal shows the behaviour Grid inherits from it.
+  </div>
+
+  <h2>The gate logic, exactly</h2>
+  <ol class="steps">
+    <li><strong>SUGGEST-authority agents never auto-enforce.</strong> Whatever the confidence, a SUGGEST decision always routes to a human. "AI drafts, humans approve" is a property of the authority ladder, not app code.</li>
+    <li><strong>Enforcement needs confidence ≥ the floor (0.80).</strong> Below it, <code>autoEnforced=false</code> and the action becomes <code>DEFER</code>.</li>
+    <li><strong>BLOCK is the highest authority — it needs ≥ 0.95.</strong> Stopping traffic is the most consequential act, so an under-confident BLOCK defers to a human rather than firing.</li>
+    <li><strong>A DEFER routes into <a href="flow.html">Aether Flow</a>'s approval queue.</strong> That's the seam between the two platforms — Grid decides it can't decide, Flow gets a human to.</li>
+    <li><strong>Once the outcome is known, a feedback signal flows to <a href="core.html">Core</a>.</strong> CORRECT / INCORRECT reinforces or weakens the memories that informed the decision.</li>
+  </ol>
+</div>
+
+<footer>
+  <div><strong style="color:var(--accent)">Æ</strong> Aether Grid · <a href="index.html">Portal home</a> · <a href="memory.html">Next: Memory →</a></div>
+  <div>Illustrative offline model</div>
+</footer>
+
+<script>
+const SCENARIOS = [
+  { id:'s1', text:'Governance agent — outbound request contains possible PII', agent:'GovernanceAgent' },
+  { id:'s2', text:'Retry agent — upstream 503, decide whether to retry', agent:'RetryAgent' },
+  { id:'s3', text:'Hallucination detector — model output cites a missing source', agent:'HallucinationDetectorAgent' },
+  { id:'s4', text:'Temporal agent — predict SLA breach on this route', agent:'TemporalPredictionAgent' },
+];
+const FLOOR = 0.80, BLOCK_CEIL = 0.95;
+
+const $ = id => document.getElementById(id);
+let audit = [];
+
+$('scenario').innerHTML = SCENARIOS.map(s => `<option value="${s.id}">${s.text}</option>`).join('');
+$('conf').addEventListener('input', () => $('confVal').textContent = parseFloat($('conf').value).toFixed(2));
+
+function gate(action, conf) {
+  // returns { finalAction, autoEnforced, reason, routedTo, pill }
+  if (action === 'SUGGEST') {
+    return { finalAction:'SUGGEST', autoEnforced:false, routedTo:'human review (Flow)',
+      reason:'SUGGEST authority can never auto-enforce — always routes to a human', pill:'defer' };
+  }
+  const ceil = action === 'BLOCK' ? BLOCK_CEIL : FLOOR;
+  if (conf >= ceil) {
+    return { finalAction:action, autoEnforced:true, routedTo:'enforced inline',
+      reason:`confidence ${conf.toFixed(2)} ≥ ${ceil.toFixed(2)} — auto-enforced`,
+      pill: action === 'BLOCK' ? 'block' : action === 'ALERT' ? 'alert' : 'allow' };
+  }
+  return { finalAction:'DEFER', autoEnforced:false, routedTo:'human review queue (Flow)',
+    reason:`confidence ${conf.toFixed(2)} < ${ceil.toFixed(2)} — cannot auto-enforce, deferred to a human`, pill:'defer' };
+}
+
+function run() {
+  const sc = SCENARIOS.find(s => s.id === $('scenario').value);
+  const action = $('action').value;
+  const conf = parseFloat($('conf').value);
+  const r = gate(action, conf);
+
+  $('env').innerHTML =
+`<span class="k">AgentOutput</span> {
+  <span class="k">agentName</span>: <span class="s">"${sc.agent}"</span>,
+  <span class="k">tenantId</span>: <span class="s">"acme"</span>,
+  <span class="k">decision</span>: {
+    <span class="k">proposedAction</span>: <span class="s">"${action}"</span>,
+    <span class="k">finalAction</span>:    <span class="s">"${r.finalAction}"</span>,
+    <span class="k">confidence</span>:     <span class="n">${conf.toFixed(2)}</span>,
+    <span class="k">autoEnforced</span>:   <span class="n">${r.autoEnforced}</span>,
+    <span class="k">rationale</span>:      <span class="s">"${r.reason}"</span>
+  },
+  <span class="k">routedTo</span>: <span class="s">"${r.routedTo}"</span>
+}`;
+
+  const pillClass = 'pill-' + r.pill;
+  const label = r.finalAction === 'DEFER' ? 'DEFER → human' : r.finalAction + (r.autoEnforced ? ' · auto-enforced' : '');
+  $('outcome').innerHTML =
+    `<span class="pill ${pillClass}">${label}</span>` +
+    (r.finalAction === 'DEFER'
+      ? ` <span class="small muted">→ lands in <a href="flow.html">Flow</a>'s approval queue</span>`
+      : ` <span class="small muted">→ feedback signal to <a href="core.html">Core</a></span>`);
+
+  const stamp = new Date().toLocaleTimeString();
+  audit.unshift(`<div class="line"><span class="t">${stamp}</span> ${sc.agent} · ${action}@${conf.toFixed(2)} → <b>${r.finalAction}</b> · enforced=${r.autoEnforced}</div>`);
+  if (audit.length > 20) audit.pop();
+  $('audit').innerHTML = audit.join('');
+}
+
+$('run').addEventListener('click', run);
+$('clear').addEventListener('click', () => { audit = []; $('audit').innerHTML = '<div class="line t">no decisions yet</div>'; });
+</script>
+</body>
+</html>

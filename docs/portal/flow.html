@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aether Flow — Interactive Portal</title>
+<link rel="stylesheet" href="assets/portal.css" />
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand"><a href="index.html">Æ <span>Aether</span> · Portal</a></div>
+  <div class="nav-links">
+    <a href="index.html">Overview</a>
+    <a href="core.html">Core</a>
+    <a href="grid.html">Grid</a>
+    <a href="memory.html">Memory</a>
+    <a href="vault.html">Vault</a>
+    <a href="flow.html" class="active">Flow</a>
+    <a href="architecture.html">How it fits</a>
+    <a href="../index.html">← Hub</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="page-head">
+    <div class="eyebrow"><span class="dot" style="background:var(--purple)"></span>Aether Flow · Workflow Platform · Port 8085</div>
+    <h1>Human approval, <span class="grad">with a clock on it</span></h1>
+    <p class="lead">
+      Flow drives multi-step human-AI processes through a persisted state machine. When it reaches a
+      <strong>HUMAN_APPROVAL</strong> step it raises an approval task with an <strong>SLA deadline</strong>. Miss the
+      deadline and an escalation sweep flags it — it <em>marks</em> visibility, it never auto-decides. And when
+      <a href="grid.html">Grid</a> DEFERs a decision, it lands right here.
+    </p>
+  </div>
+
+  <div class="sim">
+    <div class="sim-head"><span class="badge">Simulation</span><span class="sim-title">Workflow state machine + approval SLA</span></div>
+    <div class="sim-sub">Start an instance and watch it run the automated and agent steps, then park at the human gate.
+      Approve or reject it — or advance time and let the SLA breach so the escalation sweep flags it.</div>
+
+    <h3>Definition · <code>invoice-approval</code> v1</h3>
+    <div class="flowdiagram" id="machine"></div>
+
+    <div class="controls" style="margin-top:1.2rem">
+      <button class="btn btn-primary" id="start">▶ Start workflow instance</button>
+      <button class="btn" id="defer">⚡ Receive DEFER from Grid</button>
+      <button class="btn" id="tick">⏱ Advance time (SLA sweep)</button>
+      <button class="btn btn-ghost" id="reset">Reset</button>
+      <span class="pill pill-info" id="clock">t 0</span>
+    </div>
+
+    <div class="split" style="margin-top:1rem">
+      <div>
+        <h3>Approval queue</h3>
+        <div class="bars" id="queue"><div class="small muted">No tasks yet — start an instance or receive a Grid DEFER.</div></div>
+      </div>
+      <div>
+        <h3>Instance &amp; event log</h3>
+        <div class="log" id="log"><div class="line t">idle</div></div>
+      </div>
+    </div>
+  </div>
+
+  <h2>The rules the engine enforces</h2>
+  <ol class="steps">
+    <li><strong>Every transition is persisted.</strong> The instance's state survives a restart — that's the State Persistence capability. Here each step change is logged as it commits.</li>
+    <li><strong>The human gate raises a task with an SLA.</strong> Reaching HUMAN_APPROVAL creates a <code>PENDING</code> task with a deadline; the instance waits on a human, not a timer.</li>
+    <li><strong>Escalation marks; it never decides.</strong> When the SLA breaches, the sweep flips <code>PENDING → ESCALATED</code> to raise visibility. It never approves, rejects, or deletes — a human always decides.</li>
+    <li><strong>Grid DEFERs arrive as a bounded projection.</strong> A deferred decision enters the queue carrying only a summary and coarse provenance — no Grid internals, no raw payload, no PII.</li>
+  </ol>
+
+  <div class="note green">
+    <strong>Bounded context:</strong> Flow owns orchestration and human approval. It stores no personal memory
+    (<a href="core.html">Core</a>), shared memory (<a href="memory.html">Memory</a>), or documents (<a href="vault.html">Vault</a>).
+    It integrates with Grid only at the DEFER seam.
+  </div>
+</div>
+
+<footer>
+  <div><strong style="color:var(--accent)">Æ</strong> Aether Flow · <a href="index.html">Portal home</a> · <a href="architecture.html">Next: How it fits →</a></div>
+  <div>Illustrative offline model</div>
+</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const STEPS = [
+  { key:'START',    kind:'AUTOMATED',      label:'Receive invoice' },
+  { key:'EXTRACT',  kind:'AGENT',          label:'Agent extracts line items' },
+  { key:'APPROVE',  kind:'HUMAN_APPROVAL', label:'Finance approves', sla:3, role:'finance' },
+  { key:'PAY',      kind:'AUTOMATED',      label:'Schedule payment' },
+  { key:'END',      kind:'END',            label:'Done' },
+];
+let clock = 0, current = null, tasks = [], events = [], seq = 0;
+
+function log(msg){ events.unshift({ t: clock, msg }); if (events.length>16) events.pop(); }
+
+function renderMachine() {
+  $('machine').innerHTML = STEPS.map(s => {
+    const active = s.key === current;
+    const done = current && STEPS.findIndex(x=>x.key===s.key) < STEPS.findIndex(x=>x.key===current);
+    const cls = s.kind==='HUMAN_APPROVAL' ? 'hl-amber' : s.kind==='AGENT' ? 'hl-green' : s.kind==='END' ? 'hl-purple' : 'hl-dim';
+    const mark = active ? '▶ ' : done ? '✓ ' : '  ';
+    const hi = active ? ' style="color:var(--text);font-weight:700"' : '';
+    return `<span${hi}>${mark}<span class="${cls}">${s.key.padEnd(9)}</span> ${s.kind.padEnd(15)} ${s.label}${s.sla?`   (SLA ${s.sla})`:''}</span>`;
+  }).join('\n');
+}
+
+function renderQueue() {
+  if (!tasks.length) { $('queue').innerHTML = '<div class="small muted">No tasks yet — start an instance or receive a Grid DEFER.</div>'; return; }
+  $('queue').innerHTML = tasks.map(t => {
+    const stateClass = t.state==='ESCALATED' ? 'pill-block' : t.state==='APPROVED' ? 'pill-allow' : t.state==='REJECTED' ? 'pill-block' : 'pill-defer';
+    const slaTxt = t.state==='PENDING' ? `SLA ${t.sla} left` : t.state==='ESCALATED' ? `breached by ${-t.sla}` : t.state.toLowerCase();
+    const actions = (t.state==='PENDING'||t.state==='ESCALATED')
+      ? `<button class="btn" style="padding:0.2rem 0.6rem;font-size:0.72rem" onclick="decide('${t.id}','APPROVED')">approve</button>
+         <button class="btn" style="padding:0.2rem 0.6rem;font-size:0.72rem" onclick="decide('${t.id}','REJECTED')">reject</button>` : '';
+    return `<div class="bar-item">
+      <div class="bar-top"><span class="bar-label">${t.title}</span><span class="pill ${stateClass}">${t.state}</span></div>
+      <div class="bar-top" style="margin-top:0.3rem">
+        <span class="bar-tag">${t.source} · role:${t.role} · ${slaTxt}</span>
+        <span>${actions}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderLog() {
+  $('clock').textContent = 't ' + clock;
+  $('log').innerHTML = events.length ? events.map(e=>`<div class="line"><span class="t">t${e.t}</span> ${e.msg}</div>`).join('') : '<div class="line t">idle</div>';
+}
+function render(){ renderMachine(); renderQueue(); renderLog(); }
+
+function start() {
+  current = 'START'; log('Instance started · step START (Receive invoice)');
+  // auto-run through automated + agent steps to the human gate
+  setTimeout(()=>{ current='EXTRACT'; log('AGENT step · line items extracted'); render();
+    setTimeout(()=>{
+      current='APPROVE';
+      const step = STEPS.find(s=>s.key==='APPROVE');
+      tasks.unshift({ id:'t'+(++seq), title:'Approve invoice #INV-2231 ($8,400)', role:step.role, sla:step.sla, state:'PENDING', source:'workflow' });
+      log('Reached HUMAN_APPROVAL · task raised (SLA '+step.sla+') — waiting on a human');
+      render();
+    }, 350);
+    render();
+  }, 350);
+  render();
+}
+
+function receiveDefer() {
+  tasks.unshift({ id:'t'+(++seq), title:'Grid DEFER · possible-PII outbound request', role:'governance', sla:2, state:'PENDING', source:'grid-defer' });
+  log('DEFER received from Grid · bounded projection queued (SLA 2)');
+  render();
+}
+
+function decide(id, outcome) {
+  const t = tasks.find(x=>x.id===id); if(!t) return;
+  t.state = outcome;
+  log(`Human ${outcome==='APPROVED'?'approved':'rejected'} "${t.title}"`);
+  if (t.source==='workflow' && outcome==='APPROVED') {
+    current='PAY'; log('AUTOMATED step · payment scheduled');
+    setTimeout(()=>{ current='END'; log('Instance completed · step END'); render(); }, 350);
+  } else if (t.source==='workflow' && outcome==='REJECTED') {
+    log('Instance terminated at approval gate');
+    current=null;
+  }
+  render();
+}
+
+function tick() {
+  clock++;
+  tasks.forEach(t => {
+    if (t.state==='PENDING' || t.state==='ESCALATED') {
+      t.sla--;
+      if (t.sla < 0 && t.state==='PENDING') { t.state='ESCALATED'; log(`SLA breached · task "${t.title}" → ESCALATED (visibility raised, no auto-decision)`); }
+    }
+  });
+  render();
+}
+
+function reset(){ clock=0; current=null; tasks=[]; events=[]; seq=0; log('reset'); render(); }
+
+$('start').addEventListener('click', start);
+$('defer').addEventListener('click', receiveDefer);
+$('tick').addEventListener('click', tick);
+$('reset').addEventListener('click', reset);
+render();
+</script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 
 > A distributed cognitive computing ecosystem for building persistent, memory-driven, agentic intelligence systems.
 
-**[Visual Overview](docs/index.html)** · [Vision](docs/vision/vision.md) · [Blueprint](docs/architecture/ecosystem-blueprint.md) · [Standards](standards/) · [Roadmap](docs/roadmaps/long-term.md)
+**[Visual Overview](docs/index.html)** · **[Interactive Portal](docs/portal/index.html)** · [Vision](docs/vision/vision.md) · [Blueprint](docs/architecture/ecosystem-blueprint.md) · [Standards](standards/) · [Roadmap](docs/roadmaps/long-term.md)
 
 ---
 
@@ -74,6 +74,27 @@ Aether                              (this repository — architecture & standard
 
 ---
 
+## Interactive Portal
+
+An **offline, self-contained interactive portal** lives at [`docs/portal/`](docs/portal/index.html) — open
+`docs/portal/index.html` in any browser (no server, no network). Each Aether platform has a faithful, hands-on
+simulation of its **real core loop**:
+
+| Page | Simulates |
+|---|---|
+| [Core](docs/portal/core.html) | Personal memory reinforcement on recall, decay when idle, and personal-context assembly |
+| [Grid](docs/portal/grid.html) | The confidence gate — adjust confidence and watch a decision auto-enforce or DEFER to a human |
+| [Memory](docs/portal/memory.html) | Shared team reinforcement by distinct contributor, and the privacy-preserving federation projection |
+| [Vault](docs/portal/vault.html) | The RAG pipeline — embed, vector-search within one collection, assemble a length-bounded context |
+| [Flow](docs/portal/flow.html) | A workflow state machine, a human approval gate with an SLA, and the escalation sweep |
+| [How it fits](docs/portal/architecture.html) | Dependency direction, the DEFER seam, the feedback loop, AIEL, and the HALO runtime cross-link |
+
+The simulations are illustrative teaching models (real thresholds and domain rules; no LLM, database, or network).
+The portal is **Aether-scoped** — the [HALO](https://github.com/doubts-suplab/agent-harness) runtime Grid consumes is
+cross-linked, not embedded, since it is a separate vendor-neutral peer platform.
+
+---
+
 ## What This Repository Contains
 
 This repository has **no runtime code**. It is the canonical source of truth for the entire ecosystem.
@@ -82,6 +103,7 @@ This repository has **no runtime code**. It is the canonical source of truth for
 aether/
 ├── docs/
 │   ├── index.html                    ← Visual ecosystem overview
+│   ├── portal/                       ← Offline interactive portal (per-platform simulations)
 │   ├── vision/                       ← Why Aether exists, strategic goals
 │   ├── architecture/                 ← System context, blueprints, component designs
 │   ├── domains/                      ← Healthcare, insurance, developer productivity
