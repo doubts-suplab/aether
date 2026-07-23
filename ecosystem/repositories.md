@@ -14,7 +14,7 @@
 | `aether-core` | [suplab/aether-core](https://github.com/suplab/aether-core) | Personal cognitive engine — memory, sessions, GDPR, decay | ✅ Phases 0–6 |
 | `aether-grid` | [suplab/aether-grid](https://github.com/suplab/aether-grid) | Distributed agent governance mesh | ✅ 16 Phases |
 | `aether-memory` | [suplab/aether-memory](https://github.com/suplab/aether-memory) | Shared team/org memory platform — federation, per-tenant policy | ✅ Phase 0 (scaffold) |
-| `aether-vault` | [suplab/aether-vault](https://github.com/suplab/aether-vault) | Knowledge platform — document indexing, vector search, RAG, knowledge graph | ✅ Phase 0 (scaffold) |
+| `aether-vault` | [suplab/aether-vault](https://github.com/suplab/aether-vault) | Knowledge platform — document indexing, vector search, RAG, knowledge graph | ✅ Phase 1 (ingestion & retrieval) |
 | `aether-flow` | [suplab/aether-flow](https://github.com/suplab/aether-flow) | Workflow platform — process orchestration, human approval, SLA escalation, Grid DEFER intake | ✅ Phase 0 (scaffold) |
 
 ---
