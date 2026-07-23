@@ -69,7 +69,7 @@ Team and organizational shared memory, extracted from AetherCore and generalized
 
 ---
 
-## Workflows — Owner: AetherFlow (scaffolded — Phase 0 ✅)
+## Workflows — Owner: AetherFlow (Phase 1 🔄 — orchestration hardening)
 
 | Capability | Description |
 |---|---|
