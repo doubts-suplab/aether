@@ -56,7 +56,7 @@ The knowledge layer manages structured, organizational knowledge — documents, 
 
 ---
 
-## Shared Memory — Owner: AetherMemory (scaffolded — Phase 0 ✅)
+## Shared Memory — Owner: AetherMemory (Phase 1 ✅ — shared memory engine)
 
 Team and organizational shared memory, extracted from AetherCore and generalized for multi-user and multi-instance scenarios.
 
