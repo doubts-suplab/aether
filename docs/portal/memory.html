@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aether Memory — Interactive Portal</title>
+<link rel="stylesheet" href="assets/portal.css" />
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand"><a href="index.html">Æ <span>Aether</span> · Portal</a></div>
+  <div class="nav-links">
+    <a href="index.html">Overview</a>
+    <a href="core.html">Core</a>
+    <a href="grid.html">Grid</a>
+    <a href="memory.html" class="active">Memory</a>
+    <a href="vault.html">Vault</a>
+    <a href="flow.html">Flow</a>
+    <a href="architecture.html">How it fits</a>
+    <a href="../index.html">← Hub</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="page-head">
+    <div class="eyebrow"><span class="dot" style="background:var(--purple)"></span>Aether Memory · Shared Memory Platform · Port 8083</div>
+    <h1>Team memory that <span class="grad">strengthens together, shares privately</span></h1>
+    <p class="lead">
+      Memory generalises Core's per-user cognition to a <em>team</em>. Every distinct contributor who accesses a
+      shared memory raises its salience. And when a memory is federated across instances, only a
+      <strong>bounded summary</strong> crosses the boundary — never the team, the contributors, or the raw record.
+    </p>
+  </div>
+
+  <div class="sim">
+    <div class="sim-head"><span class="badge">Simulation</span><span class="sim-title">Shared reinforcement &amp; federation projection</span></div>
+    <div class="sim-sub">Have different teammates access the memory (each distinct contributor counts once toward salience),
+      set its visibility, toggle federation, then run a cross-instance query and compare what stays internal vs. what crosses.</div>
+
+    <div class="split">
+      <div>
+        <h3>The shared memory</h3>
+        <div class="panel" style="margin-top:0">
+          <div class="bar-top"><span class="bar-label" id="smLabel"></span></div>
+          <div class="bar-track" style="margin-top:0.6rem"><div class="bar-fill" id="smFill" style="background:var(--purple)"></div></div>
+          <div class="kv" style="margin-top:0.8rem"><span class="kk">strength</span><span class="vv" id="smStrength"></span></div>
+          <div class="kv"><span class="kk">contributorCount</span><span class="vv" id="smContrib"></span></div>
+          <div class="kv"><span class="kk">visibility</span><span class="vv" id="smVis"></span></div>
+        </div>
+
+        <h3 style="margin-top:1.2rem">A teammate accesses it</h3>
+        <div class="controls">
+          <button class="btn" onclick="access('Alice')">Alice</button>
+          <button class="btn" onclick="access('Bob')">Bob</button>
+          <button class="btn" onclick="access('Carol')">Carol</button>
+          <button class="btn" onclick="access('Dave')">Dave</button>
+        </div>
+        <p class="small muted" id="contribList"></p>
+
+        <label class="field" style="margin-top:1rem">Visibility</label>
+        <select id="vis">
+          <option value="PRIVATE">PRIVATE — this team only</option>
+          <option value="TENANT">TENANT — all teams in this tenant</option>
+          <option value="FEDERATED">FEDERATED — eligible to cross instances</option>
+        </select>
+
+        <label class="field" style="margin-top:1rem;display:flex;align-items:center;gap:0.5rem;cursor:pointer">
+          <input type="checkbox" id="fedEnabled" checked style="width:auto"> Tenant has federation enabled
+        </label>
+
+        <div class="controls" style="margin-top:1rem">
+          <button class="btn btn-primary" id="fedQuery">🌐 Run federation query from a remote instance</button>
+          <button class="btn btn-ghost" id="reset">Reset</button>
+        </div>
+      </div>
+
+      <div>
+        <h3>Internal record <span class="bar-tag">(never leaves this instance)</span></h3>
+        <div class="envelope" id="internal"></div>
+        <h3 style="margin-top:1.2rem">What the remote instance receives</h3>
+        <div class="envelope" id="projected">Run a federation query…</div>
+        <div id="fedOutcome" style="margin-top:1rem"></div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Why the projection matters</h2>
+  <ol class="steps">
+    <li><strong>Privacy is the default; sharing is opt-in.</strong> Only <code>FEDERATED</code> memories in federation-enabled tenants are ever eligible. A <code>PRIVATE</code> or <code>TENANT</code> memory simply doesn't exist to a remote query.</li>
+    <li><strong>The boundary strips identity.</strong> The projection carries a bounded summary and coarse provenance only — no <code>team_id</code>, no contributor names, no raw IDs. You can see the two envelopes never match.</li>
+    <li><strong>Salience is collective.</strong> <code>contributorCount</code> rises only for <em>distinct</em> contributors — repeated access by the same teammate reinforces strength but doesn't inflate the count.</li>
+  </ol>
+
+  <div class="note green">
+    <strong>Bounded context:</strong> Memory owns shared/team memory. Personal memory stays in
+    <a href="core.html">Core</a>; documents stay in <a href="vault.html">Vault</a>. Every query is scoped by
+    <code>tenant_id</code> <em>and</em> <code>team_id</code> — and federated results never carry either.
+  </div>
+</div>
+
+<footer>
+  <div><strong style="color:var(--accent)">Æ</strong> Aether Memory · <a href="index.html">Portal home</a> · <a href="vault.html">Next: Vault →</a></div>
+  <div>Illustrative offline model</div>
+</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const SEED = () => ({
+  label:'Acme prefers phased rollouts over big-bang releases',
+  strength:0.45, contributors:new Set(['Alice']), visibility:'PRIVATE'
+});
+let sm = SEED();
+
+function access(name) {
+  const isNew = !sm.contributors.has(name);
+  sm.contributors.add(name);
+  // distinct contributor raises salience more; repeat access still reinforces a little
+  sm.strength = Math.min(1, Math.round((sm.strength + (isNew ? 0.14 : 0.05)) * 100) / 100);
+  render();
+}
+function reset(){ sm = SEED(); $('vis').value='PRIVATE'; $('fedEnabled').checked=true; $('projected').textContent='Run a federation query…'; $('fedOutcome').innerHTML=''; render(); }
+
+function render() {
+  sm.visibility = $('vis').value;
+  $('smLabel').textContent = sm.label;
+  $('smFill').style.width = Math.round(sm.strength*100) + '%';
+  $('smStrength').textContent = sm.strength.toFixed(2);
+  $('smContrib').textContent = sm.contributors.size + ' distinct';
+  $('smVis').textContent = sm.visibility;
+  $('contribList').textContent = 'Contributors so far: ' + [...sm.contributors].join(', ');
+  $('internal').innerHTML =
+`<span class="k">SharedMemory</span> {
+  <span class="k">tenantId</span>:     <span class="s">"acme"</span>,
+  <span class="k">teamId</span>:       <span class="s">"team-platform"</span>,
+  <span class="k">summary</span>:      <span class="s">"${sm.label}"</span>,
+  <span class="k">strength</span>:     <span class="n">${sm.strength.toFixed(2)}</span>,
+  <span class="k">contributors</span>: [${[...sm.contributors].map(c=>`<span class="s">"${c}"</span>`).join(', ')}],
+  <span class="k">visibility</span>:   <span class="s">"${sm.visibility}"</span>
+}`;
+}
+
+function fedQuery() {
+  const fedOn = $('fedEnabled').checked;
+  const eligible = sm.visibility === 'FEDERATED' && fedOn;
+  if (!eligible) {
+    const why = !fedOn ? 'tenant has federation disabled' : `visibility is ${sm.visibility}, not FEDERATED`;
+    $('projected').innerHTML = `<span class="s">// nothing crosses the boundary — ${why}</span>`;
+    $('fedOutcome').innerHTML = `<span class="pill pill-muted">not shared</span> <span class="small muted">privacy is the default</span>`;
+    return;
+  }
+  $('projected').innerHTML =
+`<span class="k">FederatedMemory</span> {
+  <span class="k">summary</span>:    <span class="s">"${sm.label}"</span>,
+  <span class="k">strength</span>:   <span class="n">${sm.strength.toFixed(2)}</span>,
+  <span class="k">provenance</span>: <span class="s">"a federated Aether instance"</span>
+  <span class="s">// no tenantId · no teamId · no contributors · no raw IDs</span>
+}`;
+  $('fedOutcome').innerHTML = `<span class="pill pill-info">projected &amp; shared</span> <span class="small muted">bounded summary + coarse provenance only</span>`;
+}
+
+$('vis').addEventListener('change', render);
+$('fedQuery').addEventListener('click', fedQuery);
+$('reset').addEventListener('click', reset);
+render();
+</script>
+</body>
+</html>

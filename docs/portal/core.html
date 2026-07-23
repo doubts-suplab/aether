@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aether Core — Interactive Portal</title>
+<link rel="stylesheet" href="assets/portal.css" />
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand"><a href="index.html">Æ <span>Aether</span> · Portal</a></div>
+  <div class="nav-links">
+    <a href="index.html">Overview</a>
+    <a href="core.html" class="active">Core</a>
+    <a href="grid.html">Grid</a>
+    <a href="memory.html">Memory</a>
+    <a href="vault.html">Vault</a>
+    <a href="flow.html">Flow</a>
+    <a href="architecture.html">How it fits</a>
+    <a href="../index.html">← Hub</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="page-head">
+    <div class="eyebrow"><span class="dot" style="background:#60a5fa"></span>Aether Core · The Brain · Port 8082</div>
+    <h1>Personal memory that <span class="grad">reinforces and decays</span></h1>
+    <p class="lead">
+      Core is the personal cognitive engine. It stores four kinds of memory — episodic, semantic, procedural,
+      emotional — each with a <strong>strength</strong>. Recall a memory and it strengthens; leave it idle and it
+      decays. What stays strong is what gets assembled into the <strong>personal context</strong> an agent sees.
+    </p>
+  </div>
+
+  <div class="sim">
+    <div class="sim-head"><span class="badge">Simulation</span><span class="sim-title">Memory reinforcement &amp; decay</span></div>
+    <div class="sim-sub">Recall a memory to reinforce it (strength += reinforcement, capped at 1.0). Advance time to decay
+      every idle memory. Below the archive threshold a memory dims — the system naturally forgets what stopped mattering.</div>
+
+    <div class="controls">
+      <label class="field" style="margin:0">Reinforcement <span class="rangeval" id="reinfVal">0.15</span></label>
+      <input type="range" id="reinf" min="0.05" max="0.30" step="0.01" value="0.15" style="max-width:150px">
+      <label class="field" style="margin:0 0 0 1rem">Decay / tick <span class="rangeval" id="decayVal">0.12</span></label>
+      <input type="range" id="decay" min="0.02" max="0.30" step="0.01" value="0.12" style="max-width:150px">
+    </div>
+    <div class="controls">
+      <button class="btn" id="advance">⏱ Advance time (idle decay)</button>
+      <button class="btn btn-ghost" id="reset">Reset</button>
+      <span class="pill pill-info" id="tickPill">tick 0</span>
+    </div>
+
+    <div class="split" style="margin-top:1rem">
+      <div>
+        <h3>Personal memories</h3>
+        <div class="bars" id="bars"></div>
+      </div>
+      <div>
+        <h3>Cognitive session</h3>
+        <div class="log" id="session"></div>
+        <h3 style="margin-top:1.2rem">Personal context snapshot <span class="bar-tag">(what an agent receives)</span></h3>
+        <div class="envelope" id="ctx"></div>
+      </div>
+    </div>
+  </div>
+
+  <h2>What just happened</h2>
+  <ol class="steps">
+    <li><strong>Recall reinforces.</strong> Every access nudges strength up and refreshes the memory's recency — memories that matter stay relevant. This is the same signal Grid feeds back after a decision outcome is known.</li>
+    <li><strong>Idle memories decay.</strong> The scheduled decay sweep lowers the strength of anything not recalled. Nothing is deleted; it simply fades below the archive threshold.</li>
+    <li><strong>Context is assembled, not dumped.</strong> The snapshot an agent receives is the <em>top</em> memories by current strength plus the live session — a synthesized view, scoped to one user, never the whole store.</li>
+  </ol>
+
+  <div class="note green">
+    <strong>Bounded context:</strong> Core owns personal memory and nothing else. Shared team memory lives in
+    <a href="memory.html">Aether Memory</a>; documents and knowledge live in <a href="vault.html">Aether Vault</a>.
+    Every query here is scoped to a single <code>userId</code> — there is no cross-user read path.
+  </div>
+</div>
+
+<footer>
+  <div><strong style="color:var(--accent)">Æ</strong> Aether Core · <a href="index.html">Portal home</a> · <a href="grid.html">Next: Grid →</a></div>
+  <div>Illustrative offline model</div>
+</footer>
+
+<script>
+const SEED = () => ([
+  { id:'m1', label:'Onboarding call with Acme (frustrated, unresolved)', type:'emotional',  strength:0.62 },
+  { id:'m2', label:'Prefers async updates over meetings',                type:'procedural', strength:0.48 },
+  { id:'m3', label:'Q3 migration deadline is Sept 30',                   type:'semantic',   strength:0.71 },
+  { id:'m4', label:'Demo went well; team was energized',                 type:'episodic',   strength:0.55 },
+  { id:'m5', label:'Dislikes jargon-heavy summaries',                    type:'procedural', strength:0.33 },
+  { id:'m6', label:'Anxious about the budget review',                    type:'emotional',  strength:0.40 },
+]);
+const TYPE_COLOR = { episodic:'#60a5fa', semantic:'var(--teal)', procedural:'var(--purple)', emotional:'var(--amber)' };
+const ARCHIVE = 0.20;
+
+let mem = SEED();
+let tick = 0;
+let session = [];
+
+const $ = id => document.getElementById(id);
+const reinf = () => parseFloat($('reinf').value);
+const decay = () => parseFloat($('decay').value);
+
+$('reinf').addEventListener('input', () => $('reinfVal').textContent = reinf().toFixed(2));
+$('decay').addEventListener('input', () => $('decayVal').textContent = decay().toFixed(2));
+
+function log(msg, emotion) {
+  session.unshift({ t: tick, msg, emotion });
+  if (session.length > 8) session.pop();
+}
+
+function recall(id) {
+  const m = mem.find(x => x.id === id);
+  if (!m) return;
+  const before = m.strength;
+  m.strength = Math.min(1, m.strength + reinf());
+  m.strength = Math.round(m.strength * 100) / 100;
+  log(`Recalled "${trim(m.label)}" — strength ${before.toFixed(2)} → ${m.strength.toFixed(2)}`, m.type === 'emotional');
+  render();
+}
+
+function advance() {
+  tick++;
+  mem.forEach(m => {
+    m.strength = Math.max(0, Math.round((m.strength - decay()) * 100) / 100);
+  });
+  const archived = mem.filter(m => m.strength < ARCHIVE).length;
+  log(`Time advanced — ${mem.length} memories decayed, ${archived} below archive threshold`, false);
+  render();
+}
+
+function reset() { mem = SEED(); tick = 0; session = []; log('Session started', false); render(); }
+
+function trim(s){ return s.length > 34 ? s.slice(0,32) + '…' : s; }
+
+function render() {
+  $('tickPill').textContent = 'tick ' + tick;
+  // bars
+  const sorted = [...mem].sort((a,b) => b.strength - a.strength);
+  $('bars').innerHTML = sorted.map(m => {
+    const dim = m.strength < ARCHIVE ? ' dim' : '';
+    const pct = Math.round(m.strength * 100);
+    const col = TYPE_COLOR[m.type];
+    return `<div class="bar-item${dim}">
+      <div class="bar-top">
+        <span class="bar-label">${m.label}</span>
+        <button class="btn" style="padding:0.2rem 0.6rem;font-size:0.72rem" onclick="recall('${m.id}')">recall</button>
+      </div>
+      <div class="bar-top" style="margin-top:0.25rem">
+        <span class="bar-tag">${m.type}${m.strength < ARCHIVE ? ' · archived' : ''}</span>
+        <span class="bar-tag">${m.strength.toFixed(2)}</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${col}"></div></div>
+    </div>`;
+  }).join('');
+  // session
+  $('session').innerHTML = session.length
+    ? session.map(e => `<div class="line"><span class="t">t${e.t}</span> ${e.emotion ? '💭 ' : ''}${e.msg}</div>`).join('')
+    : '<div class="line t">no turns yet</div>';
+  // context snapshot
+  const top = sorted.filter(m => m.strength >= ARCHIVE).slice(0,3);
+  const arc = mem.filter(m=>m.type==='emotional').sort((a,b)=>b.strength-a.strength)[0];
+  $('ctx').innerHTML =
+`<span class="k">personalContext</span> {
+  <span class="k">userId</span>: <span class="s">"u-8842"</span>,
+  <span class="k">salientMemories</span>: [
+${top.map(m => `    { <span class="k">note</span>: <span class="s">"${m.label}"</span>, <span class="k">strength</span>: <span class="n">${m.strength.toFixed(2)}</span> }`).join(',\n')}
+  ],
+  <span class="k">emotionalArc</span>: <span class="s">"${arc ? arc.label.replace(/"/g,'') : 'neutral'}"</span>,
+  <span class="k">sessionTurns</span>: <span class="n">${session.length}</span>
+}`;
+}
+
+$('advance').addEventListener('click', advance);
+$('reset').addEventListener('click', reset);
+log('Session started', false);
+render();
+</script>
+</body>
+</html>

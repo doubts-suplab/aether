@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aether — Interactive Portal</title>
+<link rel="stylesheet" href="assets/portal.css" />
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand"><a href="index.html">Æ <span>Aether</span> · Portal</a></div>
+  <div class="nav-links">
+    <a href="index.html" class="active">Overview</a>
+    <a href="core.html">Core</a>
+    <a href="grid.html">Grid</a>
+    <a href="memory.html">Memory</a>
+    <a href="vault.html">Vault</a>
+    <a href="flow.html">Flow</a>
+    <a href="architecture.html">How it fits</a>
+    <a href="../index.html">← Hub</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="page-head" style="border:none;padding-bottom:0;margin-bottom:1.5rem">
+    <div class="eyebrow">Offline Interactive Portal · No backend, no network</div>
+    <h1>See the Aether ecosystem <span class="grad">actually work</span></h1>
+    <p class="lead">
+      Aether is a distributed cognitive computing platform — persistent memory, governed agents,
+      knowledge, and human-in-the-loop workflows. This portal is a hands-on walkthrough: each
+      platform below has a small, faithful <strong>simulation of its real core loop</strong>, running
+      entirely in your browser. Nothing here calls a server — it's a teaching model of the mechanics,
+      not the production runtime.
+    </p>
+  </div>
+
+  <div class="note blue">
+    <strong>How to use this:</strong> open any platform below and interact with the controls — move the
+    confidence slider, recall a memory, run a RAG query, approve a workflow step. Watch the decision
+    envelopes, memory strengths, and state transitions update live. The <a href="architecture.html">How it fits</a>
+    page shows how the five platforms compose into one cognitive fabric.
+  </div>
+
+  <h2>The platforms</h2>
+  <div class="cards">
+
+    <a class="card" href="core.html">
+      <div class="card-icon" style="background:rgba(59,130,246,0.12);color:#60a5fa">🧠</div>
+      <div class="card-title">Aether Core</div>
+      <div class="card-desc">Personal cognitive engine — episodic/semantic/procedural/emotional memory that
+        <strong>reinforces on recall</strong> and <strong>decays when idle</strong>, assembled into a cognitive session.</div>
+      <div class="card-meta">Simulate memory reinforcement &amp; decay →</div>
+    </a>
+
+    <a class="card" href="grid.html">
+      <div class="card-icon" style="background:rgba(16,185,129,0.12);color:var(--green)">⚡</div>
+      <div class="card-title">Aether Grid</div>
+      <div class="card-desc">The governance runtime — every agent decision passes a <strong>confidence gate</strong>.
+        Below 0.8 it can never auto-enforce; it defers to a human. Policy, audit, and a feedback loop close the circle.</div>
+      <div class="card-meta">Drive the confidence gate →</div>
+    </a>
+
+    <a class="card" href="memory.html">
+      <div class="card-icon" style="background:rgba(139,92,246,0.12);color:var(--purple)">💾</div>
+      <div class="card-title">Aether Memory</div>
+      <div class="card-desc">Shared team memory — every distinct contributor raises salience, and
+        <strong>federation</strong> projects only bounded summaries across instances, never team or contributor identity.</div>
+      <div class="card-meta">Reinforce &amp; federate a team memory →</div>
+    </a>
+
+    <a class="card" href="vault.html">
+      <div class="card-icon" style="background:rgba(139,92,246,0.12);color:var(--purple)">📚</div>
+      <div class="card-title">Aether Vault</div>
+      <div class="card-desc">Knowledge platform — a <strong>RAG pipeline</strong> that embeds a query, runs vector
+        search <em>inside one collection</em>, and assembles a length-bounded context. The collection boundary is never crossed.</div>
+      <div class="card-meta">Run a retrieval query →</div>
+    </a>
+
+    <a class="card" href="flow.html">
+      <div class="card-icon" style="background:rgba(139,92,246,0.12);color:var(--purple)">🔀</div>
+      <div class="card-title">Aether Flow</div>
+      <div class="card-desc">Workflow platform — drive an instance through a persisted state machine, hit a
+        <strong>human approval gate</strong> with an SLA, and watch the escalation sweep flag a breached task. Grid DEFERs land here.</div>
+      <div class="card-meta">Run a workflow &amp; approve →</div>
+    </a>
+
+    <a class="card" href="architecture.html">
+      <div class="card-icon" style="background:rgba(99,102,241,0.12);color:var(--accent-2)">🧩</div>
+      <div class="card-title">How it fits</div>
+      <div class="card-desc">The whole picture — dependency direction, the DEFER seam between Grid and Flow, the
+        methodology (AIEL) every component is built by, and the HALO runtime Grid's agents execute inside.</div>
+      <div class="card-meta">See the ecosystem compose →</div>
+    </a>
+
+  </div>
+
+  <h2>What ties them together</h2>
+  <div class="split">
+    <div class="panel">
+      <h3>One rule you'll see everywhere</h3>
+      <p class="muted small">Aether's central governance invariant appears in every simulation:</p>
+      <p style="font-family:var(--mono);font-size:0.9rem;color:var(--text);margin-top:0.6rem">
+        confidence &lt; 0.8 &nbsp;→&nbsp; <span style="color:var(--amber)">never auto-enforce</span> &nbsp;→&nbsp; route to a human
+      </p>
+      <p class="muted small" style="margin-top:0.8rem">
+        The agent proposes; the runtime disposes. No agent approves its own consequential decision — that guarantee is
+        <em>structural</em>, not a convention. Grid enforces it at the gate; Flow raises the human task; Core records the outcome.
+      </p>
+    </div>
+    <div class="panel">
+      <h3>Bounded contexts, clean seams</h3>
+      <p class="muted small">Each platform owns exactly one capability and never reaches into another's store:</p>
+      <table>
+        <tr><td><strong>Core</strong></td><td class="muted">personal memory &amp; cognition</td></tr>
+        <tr><td><strong>Grid</strong></td><td class="muted">agent execution &amp; governance</td></tr>
+        <tr><td><strong>Memory</strong></td><td class="muted">shared team memory &amp; federation</td></tr>
+        <tr><td><strong>Vault</strong></td><td class="muted">documents, knowledge &amp; RAG</td></tr>
+        <tr><td><strong>Flow</strong></td><td class="muted">workflow &amp; human approval</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <p class="disclaimer">
+    These simulations are illustrative teaching models with simplified, deterministic logic — real thresholds and
+    domain rules, but no LLM, database, or network. They exist to make the mechanics tangible, offline.
+  </p>
+</div>
+
+<footer>
+  <div>
+    <strong style="color:var(--accent)">Æ</strong> Aether Interactive Portal ·
+    <a href="../index.html">Ecosystem Hub</a> · <a href="architecture.html">How it fits</a>
+  </div>
+  <div>Runs fully offline · Part of the <a href="https://github.com/suplab/aether">aether</a> hub</div>
+</footer>
+
+</body>
+</html>

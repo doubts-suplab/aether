@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aether Vault — Interactive Portal</title>
+<link rel="stylesheet" href="assets/portal.css" />
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand"><a href="index.html">Æ <span>Aether</span> · Portal</a></div>
+  <div class="nav-links">
+    <a href="index.html">Overview</a>
+    <a href="core.html">Core</a>
+    <a href="grid.html">Grid</a>
+    <a href="memory.html">Memory</a>
+    <a href="vault.html" class="active">Vault</a>
+    <a href="flow.html">Flow</a>
+    <a href="architecture.html">How it fits</a>
+    <a href="../index.html">← Hub</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="page-head">
+    <div class="eyebrow"><span class="dot" style="background:var(--purple)"></span>Aether Vault · Knowledge Platform · Port 8084</div>
+    <h1>Retrieval that <span class="grad">never leaves the collection</span></h1>
+    <p class="lead">
+      Vault turns documents into knowledge. A RAG query is embedded, vector-searched against document chunks
+      <em>inside one collection</em>, and the top matches are assembled into a <strong>length-bounded context</strong>
+      for an agent's prompt. Vault retrieves; the caller generates. The collection boundary is never crossed.
+    </p>
+  </div>
+
+  <div class="sim">
+    <div class="sim-head"><span class="badge">Simulation</span><span class="sim-title">The RAG pipeline</span></div>
+    <div class="sim-sub">Choose a collection, type a question, and retrieve. Watch chunks ranked by similarity, the top-K clamp,
+      and the context bounded to a character budget. Try switching collections — chunks from the other one are simply unreachable.</div>
+
+    <div class="split">
+      <div>
+        <label class="field">Collection</label>
+        <select id="collection">
+          <option value="handbook">handbook — HR &amp; policy</option>
+          <option value="engineering">engineering — runbooks &amp; ADRs</option>
+        </select>
+
+        <label class="field" style="margin-top:1rem">Query</label>
+        <input type="text" id="query" value="how much parental leave do I get?" />
+
+        <div class="controls" style="margin-top:0.4rem">
+          <span class="small muted">try:</span>
+          <button class="btn btn-ghost" style="padding:0.25rem 0.6rem;font-size:0.75rem" onclick="setQ('how do I roll back a bad deploy?')">rollback a deploy</button>
+          <button class="btn btn-ghost" style="padding:0.25rem 0.6rem;font-size:0.75rem" onclick="setQ('what is the expense approval limit?')">expense limit</button>
+        </div>
+
+        <label class="field" style="margin-top:1rem">top-K <span class="rangeval" id="kVal">3</span> <span class="small muted">(clamped to MAX_TOP_K = 5)</span></label>
+        <input type="range" id="k" min="1" max="8" step="1" value="3" style="max-width:200px">
+
+        <div class="controls" style="margin-top:1rem">
+          <button class="btn btn-primary" id="run">🔎 Embed &amp; retrieve</button>
+        </div>
+
+        <div class="panel" style="margin-top:0.5rem;padding:1rem 1.1rem">
+          <div class="kv"><span class="kk">Embedding</span><span class="vv">384-dim (all-MiniLM-L6-v2)</span></div>
+          <div class="kv"><span class="kk">Context budget</span><span class="vv">MAX_CONTEXT_CHARS = 480</span></div>
+          <div class="kv"><span class="kk">top-K clamp</span><span class="vv">MAX_TOP_K = 5</span></div>
+        </div>
+      </div>
+
+      <div>
+        <h3>Ranked chunks <span class="bar-tag">(this collection only)</span></h3>
+        <div class="bars" id="ranked"><div class="small muted">Run a query to retrieve…</div></div>
+        <h3 style="margin-top:1.2rem">Assembled RAG context <span class="bar-tag" id="ctxLen"></span></h3>
+        <div class="envelope" id="ctx">—</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>What the pipeline guarantees</h2>
+  <ol class="steps">
+    <li><strong>Retrieval is scoped to one collection.</strong> The query only ever sees chunks whose <code>collection_id</code> matches. Switch collections and the previous documents don't exist to this query — no cross-collection, no cross-tenant path.</li>
+    <li><strong>top-K is clamped.</strong> Ask for more than <code>MAX_TOP_K</code> and the pipeline caps it — an agent can't drain the store in one call.</li>
+    <li><strong>Context is length-bounded.</strong> Chunks are added in rank order until the character budget is reached; the rest are dropped. The prompt an agent receives is always bounded.</li>
+    <li><strong>Vault retrieves; it does not generate.</strong> The assembled context is handed back for the caller's LLM. Generation happens in the agent, governed by <a href="grid.html">Grid</a>.</li>
+  </ol>
+
+  <div class="note green">
+    <strong>Bounded context:</strong> Vault owns documents and the knowledge derived from them. It holds no personal
+    memory (<a href="core.html">Core</a>) and no shared team memory (<a href="memory.html">Memory</a>).
+  </div>
+</div>
+
+<footer>
+  <div><strong style="color:var(--accent)">Æ</strong> Aether Vault · <a href="index.html">Portal home</a> · <a href="flow.html">Next: Flow →</a></div>
+  <div>Illustrative offline model</div>
+</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const MAX_TOP_K = 5, MAX_CONTEXT_CHARS = 480;
+
+const CHUNKS = {
+  handbook: [
+    { doc:'leave-policy.md',    text:'Parental leave: 16 weeks fully paid for the primary caregiver, 6 weeks for the secondary, available in the first year.', terms:['parental','leave','paid','caregiver','weeks'] },
+    { doc:'expenses.md',        text:'Expenses up to $500 are self-approved; above $500 requires a manager sign-off before reimbursement.', terms:['expense','approval','limit','manager','reimburse'] },
+    { doc:'leave-policy.md',    text:'Annual leave accrues at 2 days per month and carries over a maximum of 5 days into the next year.', terms:['annual','leave','accrue','carry','days'] },
+    { doc:'code-of-conduct.md', text:'Report conduct concerns to People Ops; investigations are confidential and retaliation is prohibited.', terms:['conduct','report','confidential','retaliation'] },
+  ],
+  engineering: [
+    { doc:'deploy-runbook.md',  text:'To roll back a bad deploy: re-point the traffic weight to the previous revision, then confirm health checks before scaling the faulty one to zero.', terms:['rollback','roll','back','deploy','revision','traffic','health'] },
+    { doc:'oncall.md',          text:'On-call escalation: page the primary; if unacked in 10 minutes the secondary is paged automatically.', terms:['oncall','escalation','page','primary','secondary'] },
+    { doc:'adr-014.md',         text:'ADR-014: adopt the transactional outbox for Kafka to guarantee at-least-once delivery without dual writes.', terms:['outbox','kafka','delivery','adr','transactional'] },
+    { doc:'deploy-runbook.md',  text:'Canary deploys shift 5% of traffic first; promote only when error rate stays under the SLO for 15 minutes.', terms:['canary','deploy','traffic','slo','promote'] },
+  ]
+};
+
+function setQ(q){ $('query').value = q; run(); }
+$('k').addEventListener('input', () => $('kVal').textContent = $('k').value);
+
+function score(queryTerms, chunk) {
+  let s = 0;
+  queryTerms.forEach(qt => { if (chunk.terms.some(t => t.includes(qt) || qt.includes(t))) s += 1; });
+  // small cosine-like normalisation so it reads as a similarity
+  return Math.min(0.99, 0.35 + s * 0.16);
+}
+
+function run() {
+  const col = $('collection').value;
+  const q = $('query').value.toLowerCase().replace(/[^a-z0-9\s]/g,'');
+  const qTerms = q.split(/\s+/).filter(w => w.length > 2);
+  const kReq = parseInt($('k').value, 10);
+  const k = Math.min(kReq, MAX_TOP_K);
+
+  const ranked = CHUNKS[col]
+    .map(c => ({ ...c, sim: score(qTerms, c) }))
+    .sort((a,b) => b.sim - a.sim);
+  const top = ranked.slice(0, k);
+
+  $('ranked').innerHTML = ranked.map((c,i) => {
+    const inCtx = i < k;
+    return `<div class="bar-item${inCtx?'':' dim'}">
+      <div class="bar-top"><span class="bar-label">${c.text}</span></div>
+      <div class="bar-top" style="margin-top:0.25rem">
+        <span class="bar-tag">${c.doc} · ${inCtx ? 'in top-K' : 'ranked out'}</span>
+        <span class="bar-tag">sim ${c.sim.toFixed(2)}</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.round(c.sim*100)}%;background:${inCtx?'var(--purple)':'var(--text-muted)'}"></div></div>
+    </div>`;
+  }).join('');
+
+  // assemble length-bounded context
+  let ctx = '', used = 0, included = 0, dropped = 0;
+  for (const c of top) {
+    const piece = `[${c.doc}] ${c.text}\n`;
+    if (used + piece.length <= MAX_CONTEXT_CHARS) { ctx += piece; used += piece.length; included++; }
+    else dropped++;
+  }
+  $('ctxLen').textContent = `${used}/${MAX_CONTEXT_CHARS} chars · ${included} chunk(s)` + (dropped?` · ${dropped} dropped (budget)`:'') + (kReq>MAX_TOP_K?` · k clamped ${kReq}→${MAX_TOP_K}`:'');
+  $('ctx').textContent = ctx || '// no chunk cleared the similarity floor';
+}
+
+$('collection').addEventListener('change', run);
+$('run').addEventListener('click', run);
+$('query').addEventListener('keydown', e => { if (e.key === 'Enter') run(); });
+run();
+</script>
+</body>
+</html>
