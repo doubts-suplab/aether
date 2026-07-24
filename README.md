@@ -65,7 +65,7 @@ Aether                              (this repository — architecture & standard
 | Repository | Purpose | Status |
 |---|---|---|
 | [`aether`](.) | Ecosystem index — vision, architecture, standards, governance, ADRs | Active |
-| [`aether-core`](https://github.com/suplab/aether-core) | Personal cognitive engine — memory, sessions, emotional context | Phase 2 🔄 |
+| [`aether-core`](https://github.com/suplab/aether-core) | Personal cognitive engine — memory, sessions, emotional context | Phases 0–5 ✅ · Phase 3 GDPR right-to-erasure (core) |
 | [`aether-grid`](https://github.com/suplab/aether-grid) | Distributed agent mesh — enterprise API governance | Phase 17 🔄 |
 | [`aether-iel`](https://github.com/suplab/aether-iel) | Intelligence Engineering Lifecycle methodology framework | Active |
 | [`aether-memory`](https://github.com/suplab/aether-memory) | Shared team/org memory platform — federation, per-tenant policy | Phase 1 ✅ (shared memory engine) |
