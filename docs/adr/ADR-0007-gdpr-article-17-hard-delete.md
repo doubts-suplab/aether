@@ -1,6 +1,7 @@
 # ADR-0007 — GDPR Article 17 (Right to Erasure) implemented as hard-delete
 
-> **Status:** Accepted (approach); implementation phased — Aether Core Phase 3
+> **Status:** Accepted (approach); implementation phased — Aether Core Phase 3. Amended for
+> multi-jurisdiction retention holds (see Amendment below, V007).
 > **Date:** —
 > **Repository:** ecosystem-wide (first implemented in aether-core)
 > **Deciders:** Architect, Governance Officer
@@ -83,6 +84,30 @@ This is deliberately distinct from the ecosystem's **memory lifecycle**, where f
 - Erasure is physical `DELETE`, cascaded across the subject's rows; audit records prove erasure without retaining data.
 - Do **not** route erasure through the decay/archive CTE — archive is for reversible forgetting, not legal erasure.
 - Source: ecosystem ADR index; Core decision log `ADR-011` (Phase 3 / V006), `ADR-013` (archive contrast); Memory `ADR-0005`; Grid `GdprRedactionService`.
+
+---
+
+## Amendment — Multi-jurisdiction: hard-delete is the *default*, subject to statutory retention holds
+
+> **Added:** Aether Core Phase 3 (session 5), migration V007.
+
+Hard-delete is the default outcome of an erasure request, **not an absolute**. The "delete on
+request + immutable audit" primitive is jurisdiction-neutral and satisfies the delete right of GDPR,
+CCPA/CPRA, the ~20 US state privacy laws, LGPD, PIPL, DPDP and others alike. What differs across
+regimes is **statutory retention exceptions** — GDPR Article **17(3)** (legal claims, legal
+obligation), CCPA **§1798.105(d)** (transaction completion, security, legal compliance), and the
+retention *mandates* of sectoral US law (HIPAA, GLBA), which can legally **forbid** deletion.
+
+To honour these uniformly, Core adds a `legal_holds` seam (`LegalHoldStore`): a hold marks a
+`DataCategory` that must be retained, the erasure service **skips held categories** while still
+deleting everything unheld, and the audit event records the retained categories in `held_categories`
+so a partial erasure is demonstrable rather than silent. This refines — does not reverse — the
+hard-delete decision: unheld data is still physically deleted, and once a hold lifts a subsequent
+erasure removes it.
+
+Follow-ups that complete the multi-jurisdiction posture (not yet built): requester identity
+verification (CCPA verifiable consumer request), memory export (GDPR Art. 20 / CCPA right-to-know),
+and response-SLA orchestration (a natural Aether Flow process, 30 days GDPR / 45 days CCPA).
 
 ---
 

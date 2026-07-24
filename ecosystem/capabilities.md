@@ -20,7 +20,7 @@ The cognitive layer provides persistent, structured memory and assembled persona
 | Memory Decay | Scheduled strength reduction for idle memories — the system naturally forgets what is no longer relevant |
 | Cognitive Sessions | Multi-turn session management with turn summaries, emotional arc, and engagement tracking |
 | Personal Context Assembly | Synthesis of memories + session state + context summary into a snapshot for agent consumption |
-| GDPR Compliance | Consent management, right to access, right to erasure (Article 17 hard-delete) |
+| Privacy & Erasure | Right to erasure (hard-delete + append-only audit), multi-jurisdiction retention holds (GDPR Art. 17(3), CCPA §1798.105(d), HIPAA/GLBA) — erasure retains held categories and records them |
 
 ---
 
