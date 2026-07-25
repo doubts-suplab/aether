@@ -68,7 +68,7 @@ Aether                              (this repository — architecture & standard
 | [`aether-core`](https://github.com/suplab/aether-core) | Personal cognitive engine — memory, sessions, emotional context | Phases 0–5 ✅ · Phase 3 GDPR right-to-erasure (core) |
 | [`aether-grid`](https://github.com/suplab/aether-grid) | Distributed agent mesh — enterprise API governance | Phase 17 🔄 |
 | [`aether-iel`](https://github.com/suplab/aether-iel) | Intelligence Engineering Lifecycle methodology framework | Active |
-| [`aether-memory`](https://github.com/suplab/aether-memory) | Shared team/org memory platform — federation, per-tenant policy | Phase 1 ✅ (shared memory engine) |
+| [`aether-memory`](https://github.com/suplab/aether-memory) | Shared team/org memory platform — federation, per-tenant policy | Phase 1 ✅ · Phase 2 federation hardening (audit + rate-limit + redaction) |
 | [`aether-vault`](https://github.com/suplab/aether-vault) | Knowledge platform — document indexing, vector search, RAG, knowledge graph | Phase 1 ✅ · Phase 2 knowledge-graph extraction (core) |
 | [`aether-flow`](https://github.com/suplab/aether-flow) | Workflow platform — process orchestration, human approval, SLA escalation, Grid DEFER intake | Phase 1 ✅ · Phase 2 SLA governance (policy + escalation chains) |
 
