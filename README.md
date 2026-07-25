@@ -70,7 +70,7 @@ Aether                              (this repository — architecture & standard
 | [`aether-iel`](https://github.com/suplab/aether-iel) | Intelligence Engineering Lifecycle methodology framework | Active |
 | [`aether-memory`](https://github.com/suplab/aether-memory) | Shared team/org memory platform — federation, per-tenant policy | Phase 1 ✅ (shared memory engine) |
 | [`aether-vault`](https://github.com/suplab/aether-vault) | Knowledge platform — document indexing, vector search, RAG, knowledge graph | Phase 1 ✅ · Phase 2 knowledge-graph extraction (core) |
-| [`aether-flow`](https://github.com/suplab/aether-flow) | Workflow platform — process orchestration, human approval, SLA escalation, Grid DEFER intake | Phase 1 ✅ (orchestration hardening) |
+| [`aether-flow`](https://github.com/suplab/aether-flow) | Workflow platform — process orchestration, human approval, SLA escalation, Grid DEFER intake | Phase 1 ✅ · Phase 2 SLA governance (policy + escalation chains) |
 
 ---
 
@@ -82,6 +82,7 @@ simulation of its **real core loop**:
 
 | Page | Simulates |
 |---|---|
+| [**Ecosystem Dashboard**](docs/portal/dashboard.html) | **Mission-control umbrella view** — every repo as a node, animated cross-service data flows, and live KPI tiles + an event stream driven by a simulated workload |
 | [Core](docs/portal/core.html) | Personal memory reinforcement on recall, decay when idle, and personal-context assembly |
 | [Grid](docs/portal/grid.html) | The confidence gate — adjust confidence and watch a decision auto-enforce or DEFER to a human |
 | [Memory](docs/portal/memory.html) | Shared team reinforcement by distinct contributor, and the privacy-preserving federation projection |
