@@ -82,6 +82,7 @@ simulation of its **real core loop**:
 
 | Page | Simulates |
 |---|---|
+| [**Ecosystem Dashboard**](docs/portal/dashboard.html) | **Mission-control umbrella view** — every repo as a node, animated cross-service data flows, and live KPI tiles + an event stream driven by a simulated workload |
 | [Core](docs/portal/core.html) | Personal memory reinforcement on recall, decay when idle, and personal-context assembly |
 | [Grid](docs/portal/grid.html) | The confidence gate — adjust confidence and watch a decision auto-enforce or DEFER to a human |
 | [Memory](docs/portal/memory.html) | Shared team reinforcement by distinct contributor, and the privacy-preserving federation projection |
