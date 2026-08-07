@@ -3,6 +3,11 @@
 > This roadmap describes the five-phase arc from the current foundation to collective intelligence.
 > Each phase delivers independently valuable capabilities that also advance the long-term vision.
 > For repo-specific roadmaps, see the `docs/roadmap.md` in each repository.
+>
+> **Cross-cutting improvement backlog:** the prioritized, feasibility-assessed work that hardens the
+> ecosystem *beneath* this arc (shared foundations, integration contracts, observability, community,
+> security) is tracked in [`ecosystem-improvements.md`](ecosystem-improvements.md). License is
+> unchanged (AGPL-3.0); depth before breadth.
 
 ---
 
