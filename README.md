@@ -2,7 +2,7 @@
 
 > A distributed cognitive computing ecosystem for building persistent, memory-driven, agentic intelligence systems.
 
-**[Visual Overview](docs/index.html)** · **[Interactive Portal](docs/portal/index.html)** · [Vision](docs/vision/vision.md) · [Blueprint](docs/architecture/ecosystem-blueprint.md) · [Standards](standards/) · [Roadmap](docs/roadmaps/long-term.md)
+**[Visual Overview](docs/index.html)** · **[Interactive Portal](docs/portal/index.html)** · [Vision](docs/vision/vision.md) · [Blueprint](docs/architecture/ecosystem-blueprint.md) · [Standards](standards/) · [Roadmap](docs/roadmaps/long-term.md) · [Improvement Backlog](docs/roadmaps/ecosystem-improvements.md)
 
 ---
 
