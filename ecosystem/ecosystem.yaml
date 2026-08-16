@@ -1,0 +1,47 @@
+# Aether Ecosystem Descriptor
+#
+# Machine-readable, TOOL-AGNOSTIC declaration of the Aether ecosystem's composition — the self-describing
+# companion to the human-readable `repositories.md`. Any org-management tool (e.g. APEX) can ingest this to
+# register the ecosystem's projects and then read each repo's `project-manifest.yaml` for its governed
+# posture. It contains no tool-specific fields: Aether owns its own composition; the tools stay generic.
+#
+# `github_repo` uses the ecosystem's canonical org — `doubts-suplab` — per the org-name-drift item in
+# `docs/roadmaps/ecosystem-improvements.md` (some git remotes / doc links still say `suplab/…`; that is the
+# tracked drift, not the canonical). Using the canonical org keeps a delivery→issue write-back on-target.
+
+schema_version: "1.0"
+
+organisation:
+  name: Aether
+  slug: aether
+  description: A distributed cognitive-computing ecosystem for persistent, memory-driven, agentic intelligence.
+
+projects:
+  - name: Aether
+    slug: aether
+    github_repo: doubts-suplab/aether
+    manifest_path: project-manifest.yaml
+  - name: Aether IEL
+    slug: aether-iel
+    github_repo: doubts-suplab/aether-iel
+    manifest_path: project-manifest.yaml
+  - name: Aether Core
+    slug: aether-core
+    github_repo: doubts-suplab/aether-core
+    manifest_path: project-manifest.yaml
+  - name: Aether Grid
+    slug: aether-grid
+    github_repo: doubts-suplab/aether-grid
+    manifest_path: project-manifest.yaml
+  - name: Aether Memory
+    slug: aether-memory
+    github_repo: doubts-suplab/aether-memory
+    manifest_path: project-manifest.yaml
+  - name: Aether Vault
+    slug: aether-vault
+    github_repo: doubts-suplab/aether-vault
+    manifest_path: project-manifest.yaml
+  - name: Aether Flow
+    slug: aether-flow
+    github_repo: doubts-suplab/aether-flow
+    manifest_path: project-manifest.yaml

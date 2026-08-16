@@ -2,6 +2,10 @@
 
 > Every Aether component lives in its own repository with a bounded context, independent lifecycle, and clean API contract.
 > The naming convention is `aether-{component}`. Each repo ships with EEIK bootstrap (CLAUDE.md, `.claude/memory/`, `.claude/agents/`).
+>
+> **Machine-readable companion:** [`ecosystem.yaml`](ecosystem.yaml) declares this catalog in a tool-agnostic
+> form so org-management tools (e.g. APEX) can ingest the ecosystem and, per repo, its `project-manifest.yaml`.
+> Every repo — including the hub and `aether-iel` — now carries a canonical `project-manifest.yaml`.
 
 ---
 
@@ -62,7 +66,7 @@ Every Aether repository must conform to the [Repository Guidelines standard](../
 {repo}/
 ├── CLAUDE.md                   ← EEIK project brief
 ├── README.md                   ← Entry point with ecosystem navigation table
-├── aether.manifest.yaml        ← EEIK manifest (name, type, layer, consumes, consumed-by)
+├── project-manifest.yaml       ← EEIK project manifest (canonical, schema_version 1.0)
 ├── docs/
 │   ├── index.html              ← Visual overview matching ecosystem design
 │   ├── architecture.md         ← Architecture documentation

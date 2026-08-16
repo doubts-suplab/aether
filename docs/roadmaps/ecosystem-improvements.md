@@ -57,7 +57,9 @@ In order. These are ecosystem-level and cut across repos.
 | Common libraries: embedding client, domain primitives, observability, GDPR/security helpers, event schemas | **L** |
 | Umbrella Helm chart / docker-compose for the whole stack | **M** |
 | Standardize ports, env-var naming, health endpoints, OpenAPI contracts | **M** |
-| **Fix org-name drift**: docs/links say `suplab/…` but the org is `doubts-suplab` | **S** |
+| **Fix org-name drift**: docs/links say `suplab/…` but the org is `doubts-suplab` | **S** (in progress — `ecosystem/ecosystem.yaml` now uses the canonical `doubts-suplab` org) |
+| **EEIK adoption completeness** — every repo (incl. the hub + `aether-iel`) now carries a canonical `project-manifest.yaml`; a machine-readable `ecosystem/ecosystem.yaml` descriptor was added. Remaining: engine-driven `eeik activate/lock/verify` against *external* repos (today bound to eeik-bootstrap's own root) | **M** |
+| **APEX manages the ecosystem** — APEX ingests `ecosystem.yaml` + each `project-manifest.yaml` to register projects with their governed posture and roll them up in its portfolio. Generic capability — **no Aether-specific code in APEX**; Aether is expressed as data | **M** |
 
 ### 3 — Integration depth & contracts
 | Item | Feasibility |
