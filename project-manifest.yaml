@@ -1,0 +1,55 @@
+# EEIK Project Manifest — Aether (ecosystem hub)
+# Canonical manifest (schema_version 1.0) — validates against eeik/schemas/manifest.schema.json
+# (`python -m eeik validate project-manifest.yaml`).
+#
+# The hub is a *code-less* repository: vision, architecture, standards, and the ecosystem index.
+# `technology.backend.language: mixed` reflects that it has no single runtime, and `ai.enabled: false`
+# because the hub *documents* the agentic ecosystem but runs none of it. `coverage_threshold` is nominal
+# (no product code to cover). Adopted at the manifest level; engine-driven activate/lock/verify against
+# an external repo is an eeik follow-up (plan slice B).
+
+schema_version: "1.0"
+
+project:
+  name: aether
+  description: >
+    The Aether ecosystem hub — vision, architecture, standards, and the index of the distributed
+    cognitive-computing ecosystem. A documentation and governance repository with no runtime code.
+  owner: suplab
+  domain: generic
+  project_type: enterprise-platform
+
+technology:
+  backend:
+    language: mixed
+
+architecture:
+  style: agentic
+  patterns: []
+  api_style: rest
+
+cloud:
+  provider: local-first
+  infra_as_code: none
+  multi_account: false
+  finops: false
+
+ai:
+  enabled: false
+  pattern: none
+  governance_required: false
+
+governance:
+  profile: enterprise
+  reviews_required:
+    - architecture-review
+  compliance_frameworks:
+    - gdpr
+  adr_required: true
+  coverage_threshold: 80
+
+delivery:
+  model: single-team
+  methodology: incremental
+  sprint_length_weeks: 2
+  cicd_platform: github-actions
