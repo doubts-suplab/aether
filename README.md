@@ -37,19 +37,19 @@ Current AI systems are stateless and transactional. They answer questions but do
 Aether                              (this repository — architecture & standards)
 │
 ├── AetherCore          (suplab/aether-core)    ← Personal Cognition — Brain
-│     Phases 0–1 ✅  Phase 2 🔄
+│     Phases 0–6 ✅  (GDPR erasure, retention, portability; Kubernetes + Helm)
 │
 ├── AetherGrid          (suplab/aether-grid)    ← Distributed Runtime — Nervous System
-│     Phases 0–16 ✅  Phase 17 🔄
+│     Phases 0–17 ✅  (roadmap fully delivered)
 │
 ├── Aether-IEL          (suplab/aether-iel)     ← Intelligence Engineering Lifecycle
 │
 ├── AetherMemory        (suplab/aether-memory)  ← Memory Platform
-│     Phase 1 ✅ (shared memory engine)
+│     Phases 1–4 ✅  (federation hardening, governance + policy audit, Kubernetes + Helm)
 ├── AetherVault         (suplab/aether-vault)   ← Knowledge Platform
-│     Phase 1 ✅ (ingestion & retrieval)
+│     Phases 1–4 ✅  (knowledge graph, freshness + auto-reingest, GDPR erasure, Kubernetes + Helm)
 ├── AetherFlow          (suplab/aether-flow)    ← Workflow Platform
-│     Phase 1 ✅ (orchestration hardening)
+│     Phases 1–4 ✅  (parallel fork/join, SLA governance, Grid integration, Kubernetes + Helm)
 ├── AetherEnterprise    (planned — Phase 3)     ← Enterprise Layer
 ├── AetherMind          (planned — Phase 4)     ← Personal AI Companion
 ├── AetherForge         (planned — Phase 4)     ← Developer Platform
@@ -65,12 +65,12 @@ Aether                              (this repository — architecture & standard
 | Repository | Purpose | Status |
 |---|---|---|
 | [`aether`](.) | Ecosystem index — vision, architecture, standards, governance, ADRs | Active |
-| [`aether-core`](https://github.com/suplab/aether-core) | Personal cognitive engine — memory, sessions, emotional context | Phases 0–5 ✅ · Phase 3 GDPR right-to-erasure (core) |
-| [`aether-grid`](https://github.com/suplab/aether-grid) | Distributed agent mesh — enterprise API governance | Phase 17 🔄 |
+| [`aether-core`](https://github.com/suplab/aether-core) | Personal cognitive engine — memory, sessions, emotional context | Phases 0–6 ✅ · GDPR erasure + legal holds + retention + portability · Kubernetes + Helm |
+| [`aether-grid`](https://github.com/suplab/aether-grid) | Distributed agent mesh — enterprise API governance | Phases 0–17 ✅ (roadmap fully delivered) |
 | [`aether-iel`](https://github.com/suplab/aether-iel) | Intelligence Engineering Lifecycle methodology framework | Active |
-| [`aether-memory`](https://github.com/suplab/aether-memory) | Shared team/org memory platform — federation, per-tenant policy | Phase 1 ✅ · Phase 2 federation hardening (audit + rate-limit + redaction) |
-| [`aether-vault`](https://github.com/suplab/aether-vault) | Knowledge platform — document indexing, vector search, RAG, knowledge graph | Phase 1 ✅ · Phase 2 knowledge-graph extraction (core) |
-| [`aether-flow`](https://github.com/suplab/aether-flow) | Workflow platform — process orchestration, human approval, SLA escalation, Grid DEFER intake | Phase 1 ✅ · Phase 2 SLA governance (policy + escalation chains) |
+| [`aether-memory`](https://github.com/suplab/aether-memory) | Shared team/org memory platform — federation, per-tenant policy | Phases 1–4 ✅ · federation hardening (audit + rate-limit + redaction + peer auth + distributed limiter) · governance (retention purge + GDPR erasure + export + policy-change audit) · Kubernetes + Helm |
+| [`aether-vault`](https://github.com/suplab/aether-vault) | Knowledge platform — document indexing, vector search, RAG, knowledge graph | Phases 1–4 ✅ · knowledge-graph extraction + entity-aware RAG · freshness policy + auto-reingestion + GDPR collection erasure · Kubernetes + Helm |
+| [`aether-flow`](https://github.com/suplab/aether-flow) | Workflow platform — process orchestration, human approval, SLA escalation, Grid DEFER intake | Phases 1–4 ✅ · parallel AND fork/join + SLA governance + business-hours calendars · Grid DEFER closed loop + agent steps + GDPR erasure · Kubernetes + Helm |
 
 ---
 

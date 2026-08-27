@@ -497,9 +497,9 @@
 │     ├── API Proxy
 │     └── Observability
 │
-├── <span class="hl-purple">AetherMemory</span>        <span class="hl-dim">← Memory Platform</span>      <span class="hl-green">✅ Phase 1</span>
-├── <span class="hl-purple">AetherVault</span>         <span class="hl-dim">← Knowledge Platform</span>   <span class="hl-green">✅ Phase 1</span>
-├── <span class="hl-purple">AetherFlow</span>          <span class="hl-dim">← Workflow Platform</span>    <span class="hl-green">✅ Phase 1</span>
+├── <span class="hl-purple">AetherMemory</span>        <span class="hl-dim">← Memory Platform</span>      <span class="hl-green">✅ Phases 1–4</span>
+├── <span class="hl-purple">AetherVault</span>         <span class="hl-dim">← Knowledge Platform</span>   <span class="hl-green">✅ Phases 1–4</span>
+├── <span class="hl-purple">AetherFlow</span>          <span class="hl-dim">← Workflow Platform</span>    <span class="hl-green">✅ Phases 1–4</span>
 ├── <span class="hl-amber">AetherForge</span>         <span class="hl-dim">← Developer Platform</span>
 ├── <span class="hl-amber">AetherMind</span>          <span class="hl-dim">← Personal Companion</span>
 ├── <span class="hl-amber">AetherEnterprise</span>    <span class="hl-dim">← Enterprise Layer</span>
@@ -564,7 +564,7 @@
           <div class="repo-name">aether-core</div>
           <div class="repo-phase phase-active">Active</div>
         </div>
-        <div class="repo-desc">Personal cognitive engine. Individual memory, reasoning sessions, emotional context. REST API consumed by AetherGrid agents. Port 8082.</div>
+        <div class="repo-desc">Personal cognitive engine. Individual memory, reasoning sessions, emotional context. Phases 0–6 complete: GDPR erasure + legal holds + retention + data portability, and a production Helm chart. REST API consumed by AetherGrid agents. Port 8082.</div>
       </div>
 
       <div class="repo-card">
@@ -573,7 +573,7 @@
           <div class="repo-name">aether-grid</div>
           <div class="repo-phase phase-active">Active</div>
         </div>
-        <div class="repo-desc">Distributed agent mesh and enterprise governance. Spring Cloud Gateway proxy + admin API. 16 phases complete. Production-ready with Kubernetes/Helm.</div>
+        <div class="repo-desc">Distributed agent mesh and enterprise governance. Spring Cloud Gateway proxy + admin API. All 17 phases complete (roadmap fully delivered). Production-ready with Kubernetes/Helm.</div>
       </div>
 
       <div class="repo-card">
@@ -589,27 +589,27 @@
         <div class="repo-card-header">
           <div class="repo-icon" style="background:rgba(139,92,246,0.12);color:var(--purple)">💾</div>
           <div class="repo-name">aether-memory</div>
-          <div class="repo-phase phase-active">Phase 1 ✅</div>
+          <div class="repo-phase phase-active">Phases 1–4 ✅</div>
         </div>
-        <div class="repo-desc">Shared team/org memory platform — team memory, shared reinforcement, privacy-preserving federation, and per-tenant policy. Shared memory engine complete: semantic search, contributor API, policy-sourced reinforcement.</div>
+        <div class="repo-desc">Shared team/org memory platform — team memory, shared reinforcement, privacy-preserving federation, and per-tenant policy. Phases 1–4 core complete: shared memory engine, federation hardening (audit, per-origin + distributed rate limiting, redaction depth, peer auth), governance (retention purge, GDPR erasure, non-reinforcing export, policy-change audit), and a production Helm chart.</div>
       </div>
 
       <div class="repo-card">
         <div class="repo-card-header">
           <div class="repo-icon" style="background:rgba(139,92,246,0.12);color:var(--purple)">📚</div>
           <div class="repo-name">aether-vault</div>
-          <div class="repo-phase phase-active">Phase 1 ✅</div>
+          <div class="repo-phase phase-active">Phases 1–4 ✅</div>
         </div>
-        <div class="repo-desc">Knowledge platform — document indexing, vector embeddings, knowledge graph, RAG pipelines, and search APIs. Ingestion &amp; retrieval engine complete: source connectors (file/http/s3), freshness-aware ingestion, pluggable tokenizer.</div>
+        <div class="repo-desc">Knowledge platform — document indexing, vector embeddings, knowledge graph, RAG pipelines, and search APIs. Phases 1–4 core complete: ingestion &amp; retrieval, knowledge-graph extraction + entity-aware RAG, freshness policy with scheduled auto-reingestion, GDPR collection erasure, and a production Helm chart.</div>
       </div>
 
       <div class="repo-card">
         <div class="repo-card-header">
           <div class="repo-icon" style="background:rgba(139,92,246,0.12);color:var(--purple)">🔀</div>
           <div class="repo-name">aether-flow</div>
-          <div class="repo-phase phase-active">Phase 1 ✅</div>
+          <div class="repo-phase phase-active">Phases 1–4 ✅</div>
         </div>
-        <div class="repo-desc">Workflow platform — BPMN-style process orchestration, human approval gates with SLAs and escalation, durable state persistence, and Aether Grid DEFER intake. Orchestration engine hardened: instance cancellation, operator stats, versioning with version-pinned execution, exclusive rework branching, Testcontainers ITs in CI.</div>
+        <div class="repo-desc">Workflow platform — BPMN-style process orchestration, human approval gates with SLAs and escalation, durable state persistence, and Aether Grid DEFER intake. Phases 1–4 core complete: orchestration hardening (cancellation, versioning, exclusive rework branching, and parallel AND fork/join), SLA governance (policy, escalation chains, business-hours calendars), the Grid DEFER closed loop (idempotent intake, outcome callback, agent steps, GDPR erasure), and a production Helm chart.</div>
       </div>
 
       <div class="repo-card">
